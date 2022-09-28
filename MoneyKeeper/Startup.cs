@@ -71,23 +71,23 @@ namespace MoneyKeeper
             {
                 endpoints.MapControllers();
                  //receive mail
-                endpoints.MapGet("/VerifyAccount", async (context) => {
-                    var sendMailService = context.RequestServices.GetService<SendMailService>();
-                    var mailContent = new MailContent();
-                    mailContent.To = "renyuiko.hamyana@gmail.com";
-                    mailContent.Subject = "MONEY KEEPER VERIFY CODE";
+                //endpoints.MapGet("/VerifyAccount", async (context) => {
+                //    var sendMailService = context.RequestServices.GetService<SendMailService>();
+                //    var mailContent = new MailContent();
+                //    mailContent.To = "renyuiko.hamyana@gmail.com";
+                //    mailContent.Subject = "MONEY KEEPER VERIFY CODE";
 
-                    mailContent.Body = "hihi";
+                //    mailContent.Body = "hihi";
 
-                    var kq = await sendMailService.SendMail(mailContent);
+                //    var kq = await sendMailService.SendMail(mailContent);
 
-                    await context.Response.WriteAsync(kq);
-                });
+                //    await context.Response.WriteAsync(kq);
+                //});
             });
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/moneykeeper/v1/swagger.json", "Test API Money Keeper APP");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Test API Money Keeper APP");
             });
         }
      

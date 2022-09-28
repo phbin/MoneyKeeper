@@ -9,10 +9,14 @@ namespace MoneyKeeper
 {
     public class SendMailService
     {
-        MailSettings _mailSettings { get; set; }
-        public SendMailService(IOptions<MailSettings> mailSettings)
+        MailSettings _mailSettings = new MailSettings();
+        public SendMailService()
         {
-            _mailSettings = mailSettings.Value;
+            _mailSettings.DisplayName = "MONEYKEEPER";
+            _mailSettings.Mail = "renyuiko.hamyana@gmail.com";
+            _mailSettings.Password = "nawakyvfqncmjdyn";
+            _mailSettings.Port = 587;
+            _mailSettings.Host = "smtp.gmail.com";
         }
         public async Task<string> SendMail(MailContent mailContent)
         {
@@ -33,8 +37,6 @@ namespace MoneyKeeper
                 Console.WriteLine(e.Message);
                 return "Error" + e.Message;
             }
-          
-
             smtp.Disconnect(true);
             return "Success";
 
