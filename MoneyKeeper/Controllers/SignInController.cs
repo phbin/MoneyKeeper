@@ -11,8 +11,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace MoneyKeeper.Controllers
 {
     [Route("api/[controller]")]
@@ -28,7 +26,7 @@ namespace MoneyKeeper.Controllers
 
         // POST api/<SignInController>
         [HttpPost]
-        public string LogIn([FromBody] Users value)
+        public string LogIn(Users value)
         {
             int count = 0;
             client = new FireSharp.FirebaseClient(config);

@@ -13,7 +13,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace MoneyKeeper.Controllers
 {
@@ -27,20 +26,7 @@ namespace MoneyKeeper.Controllers
             BasePath= "https://money-keeper-e4af2-default-rtdb.firebaseio.com/"
         };
         IFirebaseClient client;
-        //// GET: api/<SignUpController>
-        //[HttpGet]
-        //public int Get()
-        //{
-            
-        //}
-
-        //// GET api/<SignUpController>/5
-        //[HttpGet("{id}")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
-      
+     
         [HttpPost("OTPGeneration")]
         public string GenerateOTP(Users value)
         {
@@ -66,12 +52,10 @@ namespace MoneyKeeper.Controllers
                     SendOTP(value.email);
                     PushResponse setResponse = client.Push("Users", value);
                     return JsonConvert.SerializeObject("Email: "+value.email+" OTP: "+randomCode);
-                    //ModelState.AddModelError(string.Empty, "Đăng ký thành công.");
                 }
                 catch (Exception e)                                                                                                                                             
                 {
                     return JsonConvert.SerializeObject(e.Message);
-                    //ModelState.AddModelError(string.Empty, e.Message);
                 }
             }
             else
@@ -81,11 +65,7 @@ namespace MoneyKeeper.Controllers
             }
         }
 
-        /// <summary>
-        /// Validate OTP
-        /// </summary>
-        /// <param name="otp"></param>
-        /// <returns></returns>
+    
         [HttpPost("OTPValidation")]
         public string ValidateOTP(string email, string otp)
         {
@@ -130,20 +110,6 @@ namespace MoneyKeeper.Controllers
             mailContent.Body = "Your OTP for Money Keeper: "+randomCode;
 
             var result =  sendMailService.SendMail(mailContent);
-            //return randomCode;
         }
-
-
-        //// PUT api/<SignUpController>/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
-
-        //// DELETE api/<SignUpController>/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
     }
 }
