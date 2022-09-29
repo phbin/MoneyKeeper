@@ -2,34 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace MoneyKeeper.Utils
 {
     public class EncodePassword
     {
-        //SALT STRING
-        public static byte[] GetRandomSalt(int length)
+        public static string MD5Hash(string input)
         {
-            var random = new RNGCryptoServiceProvider();
-            byte[] salt = new byte[length];
-            random.GetNonZeroBytes(salt);
-            return salt;
-        }
-        //PASSWORD WITH SALT
-        public static byte[] SaltHashPaswword(byte[] password, byte[] salt)
-        {
-            HashAlgorithm algorithm = new SHA256Managed();
-            byte[] plainTextWithSaltBytes = new byte[password.Length + salt.Length];
-            for(int i = 0; i < password.Length; i++)
+            StringBuilder hash = new StringBuilder();
+            MD5CryptoServiceProvider md5provider = new MD5CryptoServiceProvider();
+            byte[] bytes = md5provider.ComputeHash(new UTF8Encoding().GetBytes(input));
+            for (int i = 0; i < bytes.Length; i++)
             {
-                plainTextWithSaltBytes[i] = password[i];
+                hash.Append(bytes[i].ToString("x2"));
             }
-            for (int i = 0; i < salt.Length; i++)
-            {
-                plainTextWithSaltBytes[password.Length+i] = salt[i];
-            }
-            return algorithm.ComputeHash(plainTextWithSaltBytes);
+            return hash.ToString();
         }
     }
 }

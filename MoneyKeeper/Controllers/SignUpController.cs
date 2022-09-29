@@ -62,7 +62,7 @@ namespace MoneyKeeper.Controllers
             if (count==0){
                 try
                 {
-                    value.password = Convert.ToBase64String(EncodePassword.SaltHashPaswword(Encoding.ASCII.GetBytes(value.password), Convert.FromBase64String(Convert.ToBase64String(EncodePassword.GetRandomSalt(16)))));
+                    value.password = EncodePassword.MD5Hash(value.password);
                     SendOTP(value.email);
                     PushResponse setResponse = client.Push("Users", value);
                     return JsonConvert.SerializeObject("Email: "+value.email+" OTP: "+randomCode);
