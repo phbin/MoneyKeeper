@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Firebase.Auth;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,55 +33,34 @@ namespace MoneyKeeper.Services.Auth
             _mapper = mapper;
         }
 
-        public async Task<string> SignIn(SignIn user)
-        {
-            var rs = EncodePassword.MD5Hash(user.password);
-
-            var result = await _context.Users.FirstOrDefaultAsync(x => x.email.ToLower().Equals(user.email.ToLower()));
-            //user not found
-            if (result == null)
-            {
-                return string.Empty;
-            }
-            //wrong password
-            else if (result.password != rs)
-            {
-                return string.Empty;
-            }
-            return ("sign-in success");
-        }
-
-        public async Task<string> SignUp(SignUp user)
+        public async Task<(Users,string)> SignUp(SignUp user)
         {
             var result = await _context.Users.FirstOrDefaultAsync(x => x.email.ToLower().Equals(user.email.ToLower()));
             if (result != null)
             {
                 //account has been existed
-                return string.Empty;
+                return (null,null);
             }
             else
             {
                 try
                 {
-                    //var code = SendOTP(user.email);
-                    //Users newUser = _mapper.Map<Users>(user);
-                    
-                    //var otp = new SaveCode { otp = code, user = newUser };
-                    //listWaitingCode.Add(newUser.email, otp);
                     Users newUser = new Users
                     {
                         email = user.email,
-                        password = EncodePassword.MD5Hash(user.password),
+                        password = user.password,
                     };
-                    await _context.Users.AddAsync(newUser);
-                    await _context.SaveChangesAsync();
-                    //listWaitingCode.Remove(code.email);
-                    return "success";
-                    //return ("ready to verify account");
+
+                    var sentCode = SendOTP(user.email);
+                    var saveCode = new SaveCode { otp = sentCode, user = newUser };
+
+                    listWaitingCode.Add(newUser.email, saveCode);
+
+                    return (newUser,sentCode);
                 }
                 catch (Exception e)
                 {
-                    return JsonConvert.SerializeObject(e.Message);
+                    return (null,JsonConvert.SerializeObject(e.Message));
                 }
             }
         }
@@ -103,30 +81,40 @@ namespace MoneyKeeper.Services.Auth
             return randomCode;
         }
 
-        //public async Task<string> VerifyAccountSignUp(OneTimePassword code)
-        //{
-        //    // var token= listWaitingCode[code.email];
+        public async Task<string> SignIn(SignIn user)
+        {
+            var rs = EncodePassword.MD5Hash(user.password);
 
-        //    //if (!listWaitingCode.TryGetValue(code.email, out token!) || code.otp != listWaitingCode[code.email].otp)
-        //    if (listWaitingCode[code.email].otp == code.otp)
+            var result = await _context.Users.FirstOrDefaultAsync(x => x.email.ToLower().Equals(user.email.ToLower()));
+            //user not found
+            if (result == null)
+            {
+                return null;
+            }
+            //wrong password
+            else if (result.password != rs)
+            {
+                return null;
+            }
+            return ("sign-in success");
+        }
 
-        //    {
-        //        return string.Empty;
-        //    }
-        //    else
-        //    {
-        //        Users newUser = new Users
-        //        {
-        //            email = code.email,
-        //            password = EncodePassword.MD5Hash(listWaitingCode[code.email].user.password),
-        //        };
-        //        await _context.Users.AddAsync(newUser);
-        //        await _context.SaveChangesAsync();
-        //        listWaitingCode.Remove(code.email);
-        //        return "sucess";
-        //        //}
-        //    }
-          
-        //}
+        public async Task<(Users,string)> VerifyAccountSignUp(OneTimePassword code)
+        {
+            SaveCode newCode;
+            if (!listWaitingCode.TryGetValue(code.email, out newCode!) || code.otp != newCode.otp)
+            {
+                return (null, null);
+            }
+            Users newUser = new Users
+            {
+                email = newCode.user.email,
+                password = EncodePassword.MD5Hash(newCode.user.password),
+            };
+            await _context.Users.AddAsync(newUser);
+            await _context.SaveChangesAsync();
+            listWaitingCode.Remove(code.email);
+            return (newUser, "Sign up success");
+        }
     }
 }

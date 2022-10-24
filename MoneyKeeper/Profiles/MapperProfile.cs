@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Firebase.Auth;
 using Microsoft.Extensions.Logging;
 using MoneyKeeper.Data.Users;
 using MoneyKeeper.Models;

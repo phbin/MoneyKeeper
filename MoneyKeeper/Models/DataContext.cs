@@ -1,5 +1,4 @@
-﻿using Firebase.Auth;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace MoneyKeeper.Models
 {

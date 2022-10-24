@@ -1,5 +1,4 @@
-﻿using Firebase.Auth;
-using MoneyKeeper.Data.Users;
+﻿using MoneyKeeper.Data.Users;
 using MoneyKeeper.Models;
 using System.Threading.Tasks;
 using Users = MoneyKeeper.Models.Users;
@@ -11,11 +10,11 @@ namespace MoneyKeeper.Services.Auth
         //string CreateToken(User user);
         //string ValidateToken(string token);
         public Task<string> SignIn(SignIn user);
-        public Task<string> SignUp(SignUp user);
+        public Task<(Users,string)> SignUp(SignUp user);
 
         public string SendOTP(string email);
 
-        //public Task<string> VerifyAccountSignUp(OneTimePassword code);
+        public Task<(Users,string)> VerifyAccountSignUp(OneTimePassword code);
         //public Task ForgotPassword(string emai);
         //public Task ResetPassword(string emai);
 
