@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MoneyKeeper.Data;
 using MoneyKeeper.Data.Users;
@@ -28,6 +29,7 @@ namespace MoneyKeeper.Controllers
             _authService = authService;
             _mapper = mapper;
         }
+
         [HttpPost("sign-in")]
         public async Task<IActionResult> SignIn([FromBody] SignIn signInUser)
         {
@@ -38,8 +40,9 @@ namespace MoneyKeeper.Controllers
             }
             return Ok(new ApiResponse<SignIn>(signInUser, "Login successfully."));
         }
+
         [HttpPost("sign-up")]
-        public async Task<IActionResult> Register([FromBody] SignUp signUpUser)
+        public async Task<IActionResult> SignUp([FromBody] SignUp signUpUser)
         {
             var result = await _authService.SignUp(signUpUser);
             if (result==(null,null))
@@ -50,7 +53,7 @@ namespace MoneyKeeper.Controllers
         }
     
         [HttpPost("verify-account")]
-        public async Task<IActionResult> VerifyEmailToken([FromBody] OneTimePassword code)
+        public async Task<IActionResult> VerifyAccount([FromBody] OneTimePassword code)
         {
             var result = await _authService.VerifyAccountSignUp(code);
             if(result==(null,null))
@@ -60,61 +63,34 @@ namespace MoneyKeeper.Controllers
             return Ok(new ApiResponse<OneTimePassword>(code, "Verify account successfully!"));
         }
       
-        //[HttpPost("forgot-pass")]
-        //public string ForgotPassword(string email)
-        //{
-        //    FirebaseResponse getUser = client.Get("Users");
-        //    var json = getUser.Body;
-        //    Dictionary<string, Users> mailList = JsonConvert.DeserializeObject<Dictionary<string, Users>>(json);
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] string email)
+        {
+            await _authService.ForgotPassword(email);
+            return Ok(new ApiResponse<string>(email, "An email with forgot password verification code was sent"));
 
-        //    //check user is existing in db?
-        //    if (mailList != null)
-        //    {
-        //        var existedUser = mailList.Where(item => item.Value.email == email).FirstOrDefault();
+        }
 
-        //        if (existedUser.Value != null)
-        //        {
-        //            //add code to reset pass waiting list
-        //            var code = SendOTP(email);
-        //            ResetPasswordQueue[email] = code;
-        //            return JsonConvert.SerializeObject(email);
-        //        }
-        //        else
-        //            return JsonConvert.SerializeObject("Tài khoản không tồn tại!");
-        //    }
-        //    else
-        //    {
-        //        return JsonConvert.SerializeObject("Không tìm thấy tài khoản!");
-        //    }
-        //}
+        [HttpPost("verify-reset-password")]
+        public async Task<IActionResult> VerifyResetPassword([FromBody] OneTimePassword code)
+        {
+            var result = await _authService.VerifyResetPassword(code);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(new ApiResponse<OneTimePassword>(code, "Verify reset password successfully!"));
+        }
 
-        // [HttpPost("reset-pass")]
-        //public string ResetPassword(string email, string pass, string otp)
-        //{
-        //    if (ResetPasswordQueue[email] == otp)
-        //    {
-        //        FirebaseResponse getUser = client.Get("Users");
-        //        Users obj = getUser.ResultAs<Users>();
-        //        var json = getUser.Body;
-        //        Dictionary<string, Users> mailList = JsonConvert.DeserializeObject<Dictionary<string, Users>>(json);
-        //        if (mailList != null)
-        //        {
-        //            var user = mailList.Where(item => item.Value.email == email).FirstOrDefault();
-
-        //            if (user.Value != null)
-        //            {
-        //                obj.email = email;
-        //                obj.password = EncodePassword.MD5Hash(pass);
-        //                FirebaseResponse updateResponse = client.Update("Users/" + user.Key, obj);
-        //                ResetPasswordQueue.Remove(email);
-        //            }
-        //        }
-        //        return JsonConvert.SerializeObject("Đổi pass được ròi đó nhe");
-        //    }
-        //    else
-        //    {
-        //        return JsonConvert.SerializeObject("Nhập sai OTP rồi");
-        //    }
-        //}
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPassword newPassword)
+        {
+            var result = await _authService.ResetPassword(newPassword);
+            if(result==null)
+            {
+                return NotFound();
+            } 
+            return Ok(new ApiResponse<string>(string.Empty,"Password changed!"));
+        }
     }
 }

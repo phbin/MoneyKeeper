@@ -13,7 +13,6 @@ using Org.BouncyCastle.Crypto;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using static System.Net.WebRequestMethods;
 using Users = MoneyKeeper.Models.Users;
 
 namespace MoneyKeeper.Services.Auth
@@ -25,6 +24,7 @@ namespace MoneyKeeper.Services.Auth
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
         private static IDictionary<string, SaveCode> listWaitingCode = new Dictionary<string, SaveCode>();
+        private static IDictionary<string, string> listResetPassword = new Dictionary<string, string>();
 
         public AuthService(IConfiguration configuration, DataContext context, IMapper mapper)
         {
@@ -115,6 +115,60 @@ namespace MoneyKeeper.Services.Auth
             await _context.SaveChangesAsync();
             listWaitingCode.Remove(code.email);
             return (newUser, "Sign up success");
+        }
+
+        public async Task<string> ForgotPassword(string email)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.email.ToLower().Equals(email.ToLower()));
+            if (user == null)
+            {
+                //user not found
+                return null;
+            }
+            //var rePasswordCode = await _mailService.SendResetPasswordMail(email);
+           // ListForgotPasswordAccount.Add(email, rePasswordCode);
+            else
+            {
+                try
+                {
+                    var sentCode = SendOTP(email);
+                    var saveCode = new OneTimePassword { email = email, otp = sentCode };
+
+                    listResetPassword.Add(email, sentCode);
+
+                    return (sentCode);
+                }
+                catch (Exception e)
+                {
+                    return JsonConvert.SerializeObject(e.Message);
+                }
+            }
+        }
+
+        public async Task<string> ResetPassword(ResetPassword code)
+        {
+            if (code.newPassword != code.retypePassword)
+            {
+                //retype password was wrong
+                return null;
+            }
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.email.ToLower().Equals(code.email.ToLower()));
+
+            user.password = EncodePassword.MD5Hash(code.newPassword);
+            await _context.SaveChangesAsync();
+            listResetPassword.Remove(code.email);
+            return "Password changed!";
+        }
+
+        public async Task<string> VerifyResetPassword(OneTimePassword code)
+        {
+            string newCode;
+            if (!listResetPassword.TryGetValue(code.email, out newCode!) || code.otp != newCode)
+            {
+                //wrong code
+                return null;
+            }
+            return "Next step!";
         }
     }
 }
