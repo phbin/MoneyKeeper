@@ -65,7 +65,7 @@ namespace MoneyKeeper.Controllers
             {
                 return NotFound();
             }
-            var user = _mapper.Map<Users>(result.Item1); user.otp = result.Item2;
+            var user = _mapper.Map<Users>(result.Item1);
             return Ok(new ApiResponse<Users>(user, "Verify account successfully!"));
         }
       

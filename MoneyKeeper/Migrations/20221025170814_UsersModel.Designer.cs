@@ -12,7 +12,7 @@ using MoneyKeeper.Models;
 namespace MoneyKeeper.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221020130309_UsersModel")]
+    [Migration("20221025170814_UsersModel")]
     partial class UsersModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
