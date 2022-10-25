@@ -9,6 +9,7 @@ using MoneyKeeper.Services.Auth;
 using MoneyKeeper.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Org.BouncyCastle.Bcpg.OpenPgp;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,11 +35,14 @@ namespace MoneyKeeper.Controllers
         public async Task<IActionResult> SignIn([FromBody] SignIn signInUser)
         {
             var result = await _authService.SignIn(signInUser);
-            if (string.IsNullOrEmpty(result))
+
+            if (result == (null, null))
             {
                 return NotFound();
             }
-            return Ok(new ApiResponse<SignIn>(signInUser, "Login successfully."));
+            var user = _mapper.Map<Users>(result.Item1);
+
+            return Ok(new ApiResponse<Users>(user, "Login successfully."));
         }
 
         [HttpPost("sign-up")]
@@ -49,18 +53,20 @@ namespace MoneyKeeper.Controllers
             {
                 return NotFound();
             }
-            return Ok(new ApiResponse<SignUp>(signUpUser, "An email with verification code was sent"));
+            return Ok(new ApiResponse<string>(String.Empty, "An email with verification code was sent"));
         }
     
         [HttpPost("verify-account")]
         public async Task<IActionResult> VerifyAccount([FromBody] OneTimePassword code)
         {
             var result = await _authService.VerifyAccountSignUp(code);
-            if(result==(null,null))
+
+            if (result==(null,null))
             {
                 return NotFound();
             }
-            return Ok(new ApiResponse<OneTimePassword>(code, "Verify account successfully!"));
+            var user = _mapper.Map<Users>(result.Item1); user.otp = result.Item2;
+            return Ok(new ApiResponse<Users>(user, "Verify account successfully!"));
         }
       
         [HttpPost("forgot-password")]
@@ -74,23 +80,27 @@ namespace MoneyKeeper.Controllers
         [HttpPost("verify-reset-password")]
         public async Task<IActionResult> VerifyResetPassword([FromBody] OneTimePassword code)
         {
+
             var result = await _authService.VerifyResetPassword(code);
+            //var user = _mapper.Map<Users>(result);
+
             if (result == null)
             {
                 return NotFound();
             }
-            return Ok(new ApiResponse<OneTimePassword>(code, "Verify reset password successfully!"));
+            return Ok(new ApiResponse<string>(string.Empty, "Verify reset password successfully!"));
         }
 
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPassword newPassword)
         {
             var result = await _authService.ResetPassword(newPassword);
-            if(result==null)
+            if(result==(null,null))
             {
                 return NotFound();
-            } 
-            return Ok(new ApiResponse<string>(string.Empty,"Password changed!"));
+            }
+            var user = _mapper.Map<Users>(result.Item1);
+            return Ok(new ApiResponse<Users>(user,"Password changed!"));
         }
     }
 }

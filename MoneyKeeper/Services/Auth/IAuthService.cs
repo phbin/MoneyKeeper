@@ -7,7 +7,7 @@ namespace MoneyKeeper.Services.Auth
 {
     public interface IAuthService
     {
-        public Task<string> SignIn(SignIn user);
+        public Task<(Users,string)> SignIn(SignIn user);
         public Task<(Users,string)> SignUp(SignUp user);
 
         public string SendOTP(string email);
@@ -15,6 +15,6 @@ namespace MoneyKeeper.Services.Auth
         public Task<(Users,string)> VerifyAccountSignUp(OneTimePassword code);
         public Task<string> ForgotPassword(string emai);
         public Task<string> VerifyResetPassword(OneTimePassword code);
-        public Task<string> ResetPassword(ResetPassword code);
+        public Task<(Users,string)> ResetPassword(ResetPassword code);
     }
 }

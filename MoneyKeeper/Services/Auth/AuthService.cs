@@ -81,7 +81,7 @@ namespace MoneyKeeper.Services.Auth
             return randomCode;
         }
 
-        public async Task<string> SignIn(SignIn user)
+        public async Task<(Users,string)> SignIn(SignIn user)
         {
             var rs = EncodePassword.MD5Hash(user.password);
 
@@ -89,14 +89,14 @@ namespace MoneyKeeper.Services.Auth
             //user not found
             if (result == null)
             {
-                return null;
+                return (null,null);
             }
             //wrong password
             else if (result.password != rs)
             {
-                return null;
+                return (null,null);
             }
-            return ("sign-in success");
+            return (result,"sign-in success");
         }
 
         public async Task<(Users,string)> VerifyAccountSignUp(OneTimePassword code)
@@ -145,19 +145,19 @@ namespace MoneyKeeper.Services.Auth
             }
         }
 
-        public async Task<string> ResetPassword(ResetPassword code)
+        public async Task<(Users,string)> ResetPassword(ResetPassword code)
         {
             if (code.newPassword != code.retypePassword)
             {
                 //retype password was wrong
-                return null;
+                return (null,null);
             }
             var user = await _context.Users.FirstOrDefaultAsync(x => x.email.ToLower().Equals(code.email.ToLower()));
 
             user.password = EncodePassword.MD5Hash(code.newPassword);
             await _context.SaveChangesAsync();
             listResetPassword.Remove(code.email);
-            return "Password changed!";
+            return (user,"Password changed!");
         }
 
         public async Task<string> VerifyResetPassword(OneTimePassword code)
