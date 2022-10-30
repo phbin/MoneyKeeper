@@ -38,5 +38,21 @@ namespace MoneyKeeper.Controllers
                  return BadRequest();
             }
         }
+        [HttpPost("{id}")]
+        public async Task<IActionResult> RemoveUserBy(string id)
+        {
+            try
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.id == Guid.Parse(id));
+                if (user == null) return NotFound();
+                 _context.Users.Remove(user);
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
     }
 }
