@@ -14,6 +14,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Security.Cryptography.Xml;
 using System.Threading.Tasks;
 using Users = MoneyKeeper.Data.Users.Users;
 
@@ -36,9 +38,13 @@ namespace MoneyKeeper.Controllers
         {
             var result = await _authService.SignIn(signInUser);
 
-            if (result == (null, null))
+            if (result == (null, "not found"))
             {
-                return NotFound();
+                return NotFound(new ApiResponse<string>(string.Empty, "Account does not exist"));
+            }
+            else if(result == (null, "wrong"))
+            {
+                return Unauthorized(new ApiResponse<string>(string.Empty, "Incorrect password"));
             }
             var user = _mapper.Map<Users>(result.Item1);
 
@@ -51,9 +57,9 @@ namespace MoneyKeeper.Controllers
             var result = await _authService.SignUp(signUpUser);
             if (result==(null,null))
             {
-                return NotFound();
+                return NotFound(new ApiResponse<string>(string.Empty,"This email has already existed"));
             }
-            return Ok(new ApiResponse<string>(String.Empty, "An email with verification code was sent"));
+            return Ok(new ApiResponse<string>(string.Empty, "An email with verification code was sent"));
         }
     
         [HttpPost("verify-account")]
@@ -63,7 +69,7 @@ namespace MoneyKeeper.Controllers
 
             if (result==(null,null))
             {
-                return NotFound();
+                return NotFound(new ApiResponse<string>(string.Empty,"Invalid OTP code"));
             }
             var user = _mapper.Map<Users>(result.Item1);
             return Ok(new ApiResponse<Users>(user, "Verify account successfully!"));
@@ -72,7 +78,11 @@ namespace MoneyKeeper.Controllers
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] string email)
         {
-            await _authService.ForgotPassword(email);
+            var result=await _authService.ForgotPassword(email);
+            if (result ==  null)
+            {
+                return NotFound(new ApiResponse<string>(string.Empty, "User not found!"));
+            }
             return Ok(new ApiResponse<string>(email, "An email with forgot password verification code was sent"));
 
         }
@@ -82,11 +92,9 @@ namespace MoneyKeeper.Controllers
         {
 
             var result = await _authService.VerifyResetPassword(code);
-            //var user = _mapper.Map<Users>(result);
-
             if (result == null)
             {
-                return NotFound();
+                return NotFound(new ApiResponse<string>(string.Empty, "Invalid OTP code"));
             }
             return Ok(new ApiResponse<string>(string.Empty, "Verify reset password successfully!"));
         }
@@ -97,7 +105,7 @@ namespace MoneyKeeper.Controllers
             var result = await _authService.ResetPassword(newPassword);
             if(result==(null,null))
             {
-                return NotFound();
+                return NotFound(new ApiResponse<string>(string.Empty, "Confirm password does not match"));
             }
             var user = _mapper.Map<Users>(result.Item1);
             return Ok(new ApiResponse<Users>(user,"Password changed!"));

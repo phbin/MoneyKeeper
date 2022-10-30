@@ -11,7 +11,6 @@ namespace MoneyKeeper.Profiles
         {
             CreateMap<Data.Users.Users, Models.Users>();
             CreateMap<Models.Users, Data.Users.Users>();
-
         }
 
     }

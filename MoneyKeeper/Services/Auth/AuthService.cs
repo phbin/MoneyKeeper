@@ -89,12 +89,12 @@ namespace MoneyKeeper.Services.Auth
             //user not found
             if (result == null)
             {
-                return (null,null);
+                return (null,"not found");
             }
             //wrong password
             else if (result.password != rs)
             {
-                return (null,null);
+                return (null,"wrong");
             }
             return (result,"sign-in success");
         }
@@ -125,8 +125,6 @@ namespace MoneyKeeper.Services.Auth
                 //user not found
                 return null;
             }
-            //var rePasswordCode = await _mailService.SendResetPasswordMail(email);
-           // ListForgotPasswordAccount.Add(email, rePasswordCode);
             else
             {
                 try
