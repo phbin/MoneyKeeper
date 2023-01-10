@@ -9,8 +9,8 @@ namespace MoneyKeeper.Profiles
     {
         public MapperProfile()
         {
-            CreateMap<Data.Users.Users, Models.Users>();
-            CreateMap<Models.Users, Data.Users.Users>();
+            CreateMap<Data.Users.Users, Models.User>();
+            CreateMap<Models.User, Data.Users.Users>();
         }
 
     }

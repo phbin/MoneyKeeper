@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MochiApi.Models;
 
 namespace MoneyKeeper.Models
 {
@@ -10,8 +11,12 @@ namespace MoneyKeeper.Models
         }
 
         #region DbSet
-       public DbSet<Users> Users => Set<Users>();
-
+        public DbSet<User> Users => Set<User>();
+        public DbSet<Wallet> Wallets => Set<Wallet>();
+        public DbSet<Category> Categories => Set<Category>();
+        public DbSet<Transaction> Transactions => Set<Transaction>();
+        public DbSet<Budget> Budgets => Set<Budget>();
+        public DbSet<Event> Events => Set<Event>();
         #endregion
     }
 }

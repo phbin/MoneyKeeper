@@ -2,7 +2,7 @@
 {
     public class SaveCode
     {
-        public Users user { get; set; }
+        public User user { get; set; }
         public string otp { get; set; }
         public SaveCode()
         {

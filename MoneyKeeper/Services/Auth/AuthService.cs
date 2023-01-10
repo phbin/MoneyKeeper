@@ -13,7 +13,6 @@ using Org.BouncyCastle.Crypto;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Users = MoneyKeeper.Models.Users;
 
 namespace MoneyKeeper.Services.Auth
 {
@@ -33,7 +32,7 @@ namespace MoneyKeeper.Services.Auth
             _mapper = mapper;
         }
 
-        public async Task<(Users,string)> SignUp(SignUp user)
+        public async Task<(User,string)> SignUp(SignUp user)
         {
             var result = await _context.Users.FirstOrDefaultAsync(x => x.email.ToLower().Equals(user.email.ToLower()));
             if (result != null)
@@ -45,7 +44,7 @@ namespace MoneyKeeper.Services.Auth
             {
                 try
                 {
-                    Users newUser = new Users
+                    User newUser = new User
                     {
                         email = user.email,
                         password = user.password,
@@ -81,7 +80,7 @@ namespace MoneyKeeper.Services.Auth
             return randomCode;
         }
 
-        public async Task<(Users,string)> SignIn(SignIn user)
+        public async Task<(User,string)> SignIn(SignIn user)
         {
             var rs = EncodePassword.MD5Hash(user.password);
 
@@ -99,14 +98,14 @@ namespace MoneyKeeper.Services.Auth
             return (result,"sign-in success");
         }
 
-        public async Task<(Users,string)> VerifyAccountSignUp(OneTimePassword code)
+        public async Task<(User,string)> VerifyAccountSignUp(OneTimePassword code)
         {
             SaveCode newCode;
             if (!listWaitingCode.TryGetValue(code.email, out newCode!) || code.otp != newCode.otp)
             {
                 return (null, null);
             }
-            Users newUser = new Users
+            User newUser = new User
             {
                 email = newCode.user.email,
                 password = EncodePassword.MD5Hash(newCode.user.password),
@@ -143,7 +142,7 @@ namespace MoneyKeeper.Services.Auth
             }
         }
 
-        public async Task<(Users,string)> ResetPassword(ResetPassword code)
+        public async Task<(User,string)> ResetPassword(ResetPassword code)
         {
             if (code.newPassword != code.retypePassword)
             {
