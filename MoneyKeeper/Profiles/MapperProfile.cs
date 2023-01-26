@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
-using MoneyKeeper.Data.Users;
+using MoneyKeeper.Dtos;
 using MoneyKeeper.Models;
 
 namespace MoneyKeeper.Profiles
@@ -9,8 +9,12 @@ namespace MoneyKeeper.Profiles
     {
         public MapperProfile()
         {
-            CreateMap<Data.Users.Users, Models.User>();
-            CreateMap<Models.User, Data.Users.Users>();
+            CreateMap<int?, int>().ConvertUsing((src, dest) => src ?? dest);
+
+            CreateMap<User, UserDto>();
+            CreateMap<UserDto, User>();
+            CreateMap<RegisterUserDto, User>();
+            CreateMap<LoginUserDto, User>();
         }
 
     }

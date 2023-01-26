@@ -1,7 +1,7 @@
 ﻿using MoneyKeeper.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MochiApi.Models
+namespace MoneyKeeper.Models
 {
     [Table("Budget")]
     public class Budget

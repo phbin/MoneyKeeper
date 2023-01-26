@@ -2,9 +2,9 @@
 using MoneyKeeper.Models;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using static MochiApi.Common.Enum;
+using static MoneyKeeper.Common.Enum;
 
-namespace MochiApi.Models
+namespace MoneyKeeper.Models
 {
     [Table("WalletMember")]
     [Keyless]

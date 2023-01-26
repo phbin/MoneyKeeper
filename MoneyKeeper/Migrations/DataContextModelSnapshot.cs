@@ -2,7 +2,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MoneyKeeper.Models;
 
@@ -17,27 +16,20 @@ namespace MoneyKeeper.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.10")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("ProductVersion", "6.0.9")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("MochiApi.Models.Budget", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.Budget", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<int>("CreatorId")
                         .HasColumnType("int");
-
-                    b.Property<Guid?>("Creatorid")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("LimitAmount")
                         .HasColumnType("int");
@@ -46,7 +38,8 @@ namespace MoneyKeeper.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<int>("SpentAmount")
                         .HasColumnType("int");
@@ -61,32 +54,29 @@ namespace MoneyKeeper.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("Creatorid");
+                    b.HasIndex("CreatorId");
 
                     b.HasIndex("WalletId");
 
                     b.ToTable("Budget");
                 });
 
-            modelBuilder.Entity("MochiApi.Models.Category", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<int>("CreatorId")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("Creatorid")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Icon")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -96,58 +86,77 @@ namespace MoneyKeeper.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Creatorid");
+                    b.HasIndex("CreatorId");
 
                     b.HasIndex("WalletId");
 
                     b.ToTable("Category");
                 });
 
-            modelBuilder.Entity("MochiApi.Models.Event", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.Event", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<int>("CreatorId")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("Creatorid")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Icon")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int?>("WalletId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Creatorid");
+                    b.HasIndex("CreatorId");
 
                     b.HasIndex("WalletId");
 
                     b.ToTable("Event");
                 });
 
-            modelBuilder.Entity("MochiApi.Models.Transaction", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.Settings", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Mode")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Settings");
+                });
+
+            modelBuilder.Entity("MoneyKeeper.Models.Transaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
                     b.Property<int>("Amount")
                         .HasColumnType("int");
@@ -156,19 +165,17 @@ namespace MoneyKeeper.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("CreatorId")
                         .HasColumnType("int");
-
-                    b.Property<Guid?>("Creatorid")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("EventId")
                         .HasColumnType("int");
 
                     b.Property<string>("Note")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<int>("WalletId")
                         .HasColumnType("int");
@@ -177,7 +184,7 @@ namespace MoneyKeeper.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("Creatorid");
+                    b.HasIndex("CreatorId");
 
                     b.HasIndex("EventId");
 
@@ -186,25 +193,70 @@ namespace MoneyKeeper.Migrations
                     b.ToTable("Transactions");
                 });
 
-            modelBuilder.Entity("MochiApi.Models.Wallet", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("User");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Email = "test@gmail.com",
+                            Password = "123123123"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Email = "test2@gmail.com",
+                            Password = "123123123"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Email = "test3@gmail.com",
+                            Password = "123123123"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Email = "test4@gmail.com",
+                            Password = "123123123"
+                        });
+                });
+
+            modelBuilder.Entity("MoneyKeeper.Models.Wallet", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
                     b.Property<int>("Balance")
                         .HasColumnType("int");
 
                     b.Property<string>("Icon")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("IsDefault")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -212,44 +264,100 @@ namespace MoneyKeeper.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Wallet");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Balance = 100000,
+                            Icon = "",
+                            IsDefault = true,
+                            Name = "Ví",
+                            Type = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Balance = 200000,
+                            Icon = "",
+                            IsDefault = true,
+                            Name = "Ví",
+                            Type = 0
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Balance = 300000,
+                            Icon = "",
+                            IsDefault = true,
+                            Name = "Ví",
+                            Type = 0
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Balance = 400000,
+                            Icon = "",
+                            IsDefault = true,
+                            Name = "Ví",
+                            Type = 0
+                        });
                 });
 
-            modelBuilder.Entity("MoneyKeeper.Models.User", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.WalletMember", b =>
                 {
-                    b.Property<Guid>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("password")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("User");
-                });
-
-            modelBuilder.Entity("UserWallet", b =>
-                {
-                    b.Property<Guid>("Membersid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("WalletsId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("Membersid", "WalletsId");
+                    b.Property<int>("WalletId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("WalletsId");
+                    b.Property<DateTime>("JoinAt")
+                        .HasColumnType("datetime(6)");
 
-                    b.ToTable("UserWallet");
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "WalletId");
+
+                    b.HasIndex("WalletId");
+
+                    b.ToTable("WalletMember");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1,
+                            WalletId = 1,
+                            JoinAt = new DateTime(2022, 12, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Role = 0
+                        },
+                        new
+                        {
+                            UserId = 2,
+                            WalletId = 2,
+                            JoinAt = new DateTime(2022, 12, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Role = 0
+                        },
+                        new
+                        {
+                            UserId = 3,
+                            WalletId = 3,
+                            JoinAt = new DateTime(2022, 12, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Role = 0
+                        },
+                        new
+                        {
+                            UserId = 4,
+                            WalletId = 4,
+                            JoinAt = new DateTime(2022, 12, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Role = 0
+                        });
                 });
 
-            modelBuilder.Entity("MochiApi.Models.Budget", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.Budget", b =>
                 {
-                    b.HasOne("MochiApi.Models.Category", "Category")
+                    b.HasOne("MoneyKeeper.Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -257,9 +365,11 @@ namespace MoneyKeeper.Migrations
 
                     b.HasOne("MoneyKeeper.Models.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("Creatorid");
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("MochiApi.Models.Wallet", "Wallet")
+                    b.HasOne("MoneyKeeper.Models.Wallet", "Wallet")
                         .WithMany()
                         .HasForeignKey("WalletId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -272,13 +382,15 @@ namespace MoneyKeeper.Migrations
                     b.Navigation("Wallet");
                 });
 
-            modelBuilder.Entity("MochiApi.Models.Category", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.Category", b =>
                 {
                     b.HasOne("MoneyKeeper.Models.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("Creatorid");
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("MochiApi.Models.Wallet", "Wallet")
+                    b.HasOne("MoneyKeeper.Models.Wallet", "Wallet")
                         .WithMany()
                         .HasForeignKey("WalletId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -289,13 +401,15 @@ namespace MoneyKeeper.Migrations
                     b.Navigation("Wallet");
                 });
 
-            modelBuilder.Entity("MochiApi.Models.Event", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.Event", b =>
                 {
                     b.HasOne("MoneyKeeper.Models.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("Creatorid");
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("MochiApi.Models.Wallet", "Wallet")
+                    b.HasOne("MoneyKeeper.Models.Wallet", "Wallet")
                         .WithMany()
                         .HasForeignKey("WalletId");
 
@@ -304,9 +418,20 @@ namespace MoneyKeeper.Migrations
                     b.Navigation("Wallet");
                 });
 
-            modelBuilder.Entity("MochiApi.Models.Transaction", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.Settings", b =>
                 {
-                    b.HasOne("MochiApi.Models.Category", "Category")
+                    b.HasOne("MoneyKeeper.Models.User", "User")
+                        .WithOne("Settings")
+                        .HasForeignKey("MoneyKeeper.Models.Settings", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MoneyKeeper.Models.Transaction", b =>
+                {
+                    b.HasOne("MoneyKeeper.Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -314,15 +439,17 @@ namespace MoneyKeeper.Migrations
 
                     b.HasOne("MoneyKeeper.Models.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("Creatorid");
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("MochiApi.Models.Event", "Event")
+                    b.HasOne("MoneyKeeper.Models.Event", "Event")
                         .WithMany("Transactions")
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MochiApi.Models.Wallet", "Wallet")
+                    b.HasOne("MoneyKeeper.Models.Wallet", "Wallet")
                         .WithMany()
                         .HasForeignKey("WalletId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -337,24 +464,41 @@ namespace MoneyKeeper.Migrations
                     b.Navigation("Wallet");
                 });
 
-            modelBuilder.Entity("UserWallet", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.WalletMember", b =>
                 {
-                    b.HasOne("MoneyKeeper.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("Membersid")
+                    b.HasOne("MoneyKeeper.Models.Wallet", "Wallet")
+                        .WithMany("WalletMembers")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MochiApi.Models.Wallet", null)
-                        .WithMany()
-                        .HasForeignKey("WalletsId")
+                    b.HasOne("MoneyKeeper.Models.User", "User")
+                        .WithMany("WalletMembers")
+                        .HasForeignKey("WalletId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
+
+                    b.Navigation("Wallet");
                 });
 
-            modelBuilder.Entity("MochiApi.Models.Event", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.Event", b =>
                 {
                     b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("MoneyKeeper.Models.User", b =>
+                {
+                    b.Navigation("Settings")
+                        .IsRequired();
+
+                    b.Navigation("WalletMembers");
+                });
+
+            modelBuilder.Entity("MoneyKeeper.Models.Wallet", b =>
+                {
+                    b.Navigation("WalletMembers");
                 });
 #pragma warning restore 612, 618
         }

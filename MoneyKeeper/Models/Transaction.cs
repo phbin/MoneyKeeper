@@ -1,7 +1,7 @@
 ﻿using MoneyKeeper.Models;
 using System;
 
-namespace MochiApi.Models
+namespace MoneyKeeper.Models
 {
     public class Transaction
     {

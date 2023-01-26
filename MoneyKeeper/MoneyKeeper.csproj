@@ -24,6 +24,7 @@
     <PackageReference Include="Microsoft.Owin.Host.SystemWeb" Version="4.1.0" />
     <PackageReference Include="Microsoft.Owin.Security" Version="4.1.0" />
     <PackageReference Include="Microsoft.Owin.Security.Cookies" Version="4.1.0" />
+    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.22" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 

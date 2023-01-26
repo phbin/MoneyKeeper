@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MoneyKeeper.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using static MochiApi.Common.Enum;
+using static MoneyKeeper.Common.Enum;
 
-namespace MochiApi.Models
+namespace MoneyKeeper.Models
 {
     [Table("Wallet")]
     public class Wallet

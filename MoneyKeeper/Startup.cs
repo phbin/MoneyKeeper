@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using MoneyKeeper.Dtos.Settings;
 using MoneyKeeper.Models;
 using MoneyKeeper.Services.Auth;
 using System;
@@ -35,9 +36,9 @@ namespace MoneyKeeper
         {
             //mail
             services.AddOptions();
-            var mailsettings = Configuration.GetSection("MailSettings");
-            services.Configure<MailSettings>(mailsettings);
-            services.AddTransient<SendMailService>();
+            //var mailsettings = Configuration.GetSection("MailSettings");
+           // services.Configure<MailSettings>(mailsettings);
+            //services.AddTransient<SendMailService>();
             services.AddAutoMapper(typeof(Startup));
             services.AddDbContext<DataContext>(option =>
             {

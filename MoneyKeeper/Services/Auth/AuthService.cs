@@ -1,171 +1,215 @@
 ﻿using AutoMapper;
+using MailKit;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using MoneyKeeper.Data.Users;
+using Microsoft.IdentityModel.Tokens;
 using MoneyKeeper.Models;
-using MoneyKeeper.Utils;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Org.BouncyCastle.Crypto;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
+using MoneyKeeper.Dtos.Auth;
+using MoneyKeeper.Dtos.User;
+using MoneyKeeper.Data;
+using MoneyKeeper.Dtos;
 
 namespace MoneyKeeper.Services.Auth
 {
     public class AuthService : IAuthService
     {
-        public DataContext _context { get; set; }
-
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
-        private static IDictionary<string, SaveCode> listWaitingCode = new Dictionary<string, SaveCode>();
-        private static IDictionary<string, string> listResetPassword = new Dictionary<string, string>();
+        private readonly Mail.IMailService _mailService;
+        private static IDictionary<string, Token> ListTokenAccount = new Dictionary<string, Token>();
+        private static IDictionary<string, Token> ListForgotPasswordAccount = new Dictionary<string, Token>();
+        private static IDictionary<string, string> ListResetPasswordAccount = new Dictionary<string, string>();
+        public DataContext _context { get; set; }
 
-        public AuthService(IConfiguration configuration, DataContext context, IMapper mapper)
+        public AuthService(IConfiguration configuration, DataContext context, IMapper mapper, Services.Mail.IMailService mailService)
         {
-            _context = context;
             _configuration = configuration;
+            _context = context;
             _mapper = mapper;
+            _mailService = mailService;
         }
 
-        public async Task<(User,string)> SignUp(SignUp user)
+        public string CreateToken(User user)
         {
-            var result = await _context.Users.FirstOrDefaultAsync(x => x.email.ToLower().Equals(user.email.ToLower()));
-            if (result != null)
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenKey = Encoding.UTF8.GetBytes(_configuration["JWT:Key"]);
+            var tokenDescriptor = new SecurityTokenDescriptor
             {
-                //account has been existed
-                return (null,null);
-            }
-            else
-            {
-                try
+                Subject = new ClaimsIdentity(new Claim[]
                 {
-                    User newUser = new User
-                    {
-                        email = user.email,
-                        password = user.password,
-                    };
-
-                    var sentCode = SendOTP(user.email);
-                    var saveCode = new SaveCode { otp = sentCode, user = newUser };
-
-                    listWaitingCode.Add(newUser.email, saveCode);
-
-                    return (newUser,sentCode);
-                }
-                catch (Exception e)
-                {
-                    return (null,JsonConvert.SerializeObject(e.Message));
-                }
-            }
-        }
-
-        public string SendOTP(string email)
-        {
-            Random rand = new Random();
-            var randomCode = (rand.Next(100000, 999999)).ToString();
-            var sendMailService = new SendMailService();
-            var mailContent = new MailContent();
-
-            mailContent.To = email;
-            mailContent.Subject = "MONEY KEEPER VERIFY CODE";
-            mailContent.Body = "Your OTP for Money Keeper: " + randomCode;
-
-            _ = sendMailService.SendMail(mailContent);
-
-            return randomCode;
-        }
-
-        public async Task<(User,string)> SignIn(SignIn user)
-        {
-            var rs = EncodePassword.MD5Hash(user.password);
-
-            var result = await _context.Users.FirstOrDefaultAsync(x => x.email.ToLower().Equals(user.email.ToLower()));
-            //user not found
-            if (result == null)
-            {
-                return (null,"not found");
-            }
-            //wrong password
-            else if (result.password != rs)
-            {
-                return (null,"wrong");
-            }
-            return (result,"sign-in success");
-        }
-
-        public async Task<(User,string)> VerifyAccountSignUp(OneTimePassword code)
-        {
-            SaveCode newCode;
-            if (!listWaitingCode.TryGetValue(code.email, out newCode!) || code.otp != newCode.otp)
-            {
-                return (null, null);
-            }
-            User newUser = new User
-            {
-                email = newCode.user.email,
-                password = EncodePassword.MD5Hash(newCode.user.password),
+                    new Claim("UserId", user.Id.ToString()),
+                }),
+                Expires = DateTime.Now.AddMonths(1),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256Signature)
             };
-            await _context.Users.AddAsync(newUser);
-            await _context.SaveChangesAsync();
-            listWaitingCode.Remove(code.email);
-            return (newUser, "Sign up success");
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
 
-        public async Task<string> ForgotPassword(string email)
+        public string ValidateToken(string token)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.email.ToLower().Equals(email.ToLower()));
+            if (token == null)
+                return null;
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(_configuration["JWT:Key"]);
+            try
+            {
+                tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                }, out SecurityToken validatedToken);
+                var jwtToken = (JwtSecurityToken)validatedToken;
+                var userId = jwtToken.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+                return userId;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public async Task<(User, string)> Login(LoginUserDto userDto)
+        {
+            var users = await _context.Users.ToListAsync();
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == userDto.Email);
             if (user == null)
             {
-                //user not found
-                return null;
+                throw new ApiException("User not found!", 400);
             }
-            else
+            else if (user.Password != userDto.Password)
             {
-                try
-                {
-                    var sentCode = SendOTP(email);
-                    var saveCode = new OneTimePassword { email = email, otp = sentCode };
-
-                    listResetPassword.Add(email, sentCode);
-
-                    return (sentCode);
-                }
-                catch (Exception e)
-                {
-                    return JsonConvert.SerializeObject(e.Message);
-                }
+                throw new ApiException("Wrong email or password!", 400);
             }
+            return (user, CreateToken(user));
         }
 
-        public async Task<(User,string)> ResetPassword(ResetPassword code)
+        public async Task Register(RegisterUserDto userDTO)
         {
-            if (code.newPassword != code.retypePassword)
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email.ToLower().Equals(userDTO.Email.ToLower()));
+            if (user != null)
             {
-                //retype password was wrong
-                return (null,null);
+                throw new ApiException("Email have already existed!", 400);
             }
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.email.ToLower().Equals(code.email.ToLower()));
+            Token token;
+            if (ListTokenAccount.TryGetValue(userDTO.Email, out token!))
+            {
+                if (token.ExpiredAt > DateTime.Now)
+                {
+                    throw new ApiException("Please try again in 2 minutes", 400);
+                }
+                ListTokenAccount.Remove(userDTO.Email);
+            }
+            var tokenCode = await _mailService.SendRegisterMail(userDTO.Email);
+            var code = new Token { Code = tokenCode, ExpiredAt = DateTime.Now.AddMinutes(2), User = userDTO };
+            ListTokenAccount.Add(userDTO.Email, code);
+        }
 
-            user.password = EncodePassword.MD5Hash(code.newPassword);
+        public async Task<bool> FindUserByEmai(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email.Trim().ToLower() == email.Trim().ToLower()) == null ? false : true;
+        }
+
+        public async Task<(User, string)> VerifyEmailToken(TokenDTO tokenDTO)
+        {
+            Token token;
+            if (!ListTokenAccount.TryGetValue(tokenDTO.Email, out token!) || tokenDTO.Code != token.Code || token.ExpiredAt < DateTime.Now)
+            {
+                throw new ApiException("Code is wrong or expired!", 400);
+            }
+            User user = new User
+            {
+                Email = token.User.Email,
+                Password = token.User.Password,
+            };
+            await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
-            listResetPassword.Remove(code.email);
-            return (user,"Password changed!");
+            ListTokenAccount.Remove(tokenDTO.Email);
+            return (user, CreateToken(user));
         }
 
-        public async Task<string> VerifyResetPassword(OneTimePassword code)
+        public async Task ForgotPassword(string email)
         {
-            string newCode;
-            if (!listResetPassword.TryGetValue(code.email, out newCode!) || code.otp != newCode)
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+            if (user == null)
             {
-                //wrong code
-                return null;
+                throw new ApiException("User not found.", 400);
             }
-            return "Next step!";
+            Token token;
+            if (ListForgotPasswordAccount.TryGetValue(email, out token!))
+            {
+                if (token.ExpiredAt > DateTime.Now)
+                {
+                    throw new ApiException("Please try again in 2 minutes", 400);
+                }
+                ListForgotPasswordAccount.Remove(email);
+            }
+            var rePasswordCode = await _mailService.SendResetPasswordMail(email);
+            ListForgotPasswordAccount.Add(email, new Token { Code = rePasswordCode, ExpiredAt = DateTime.Now.AddMinutes(2) });
+        }
+
+        public string VerifyResetPassword(string email, string value)
+        {
+            Token token;
+            if (!ListForgotPasswordAccount.TryGetValue(email, out token!) || value != token.Code)
+            {
+                throw new ApiException("Code is wrong or expired!", 400);
+            }
+            ListForgotPasswordAccount.Remove(email);
+            string code = CreateRandomToken();
+            ListResetPasswordAccount.Add(code, email);
+            return code;
+        }
+
+        public async Task<(User, string)> ResetPassword(TokenResetPasswordDto user)
+        {
+            string email;
+            if (!ListResetPasswordAccount.TryGetValue(user.Token, out email!))
+            {
+                throw new ApiException("Invalid Token", 400);
+            }
+            var _user = await _context.Users.FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+            if (_user == null)
+            {
+                throw new ApiException("User not found.", 400);
+            }
+            ListResetPasswordAccount.Remove(user.Token);
+            _user.Password = user.Password;
+            await _context.SaveChangesAsync();
+            return (_user, CreateToken(_user));
+        }
+
+        public async Task ChangePassword(ChangePassword chUser)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email.ToLower().Equals(chUser.Email.ToLower()));
+            if (user == null)
+            {
+                throw new ApiException("User not found.", 400);
+            }
+            else if (user.Password != chUser.Password)
+            {
+                throw new ApiException("Wrong current password!", 400);
+            }
+            user.Password = chUser.Password;
+            await _context.SaveChangesAsync();
+        }
+
+        private string CreateRandomToken()
+        {
+            return new Random().Next(1000000, 9999999).ToString();
         }
     }
 }

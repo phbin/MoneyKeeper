@@ -1,21 +1,22 @@
 ﻿using MoneyKeeper.Models;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using static MochiApi.Common.Enum;
+using static MoneyKeeper.Common.Enum;
 
-namespace MochiApi.Models
+namespace MoneyKeeper.Models
 {
     [Table("Category")]
     public class Category
     {
+
         public Category()
         {
             Name = String.Empty;
-            Icon = String.Empty;
+            Icon = null;
         }
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Icon { get; set; }
+        public byte[] Icon { get; set; }
         public CategoryType Type { get; set; }
         public int WalletId{get; set;}
         public Wallet? Wallet{get; set;}

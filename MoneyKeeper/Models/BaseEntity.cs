@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MochiApi.Models
+namespace MoneyKeeper.Models
 {
     public abstract class BaseEntity
     {

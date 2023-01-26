@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace MochiApi.Common
+namespace MoneyKeeper.Common
 {
     public static class Enum
     {

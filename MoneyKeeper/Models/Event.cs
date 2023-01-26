@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MochiApi.Models
+namespace MoneyKeeper.Models
 {
     [Table("Event")]
     public class Event
