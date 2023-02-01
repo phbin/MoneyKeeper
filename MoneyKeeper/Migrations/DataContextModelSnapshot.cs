@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MoneyKeeper.Models;
+using MoneyKeeper.Models;
 
 #nullable disable
 
@@ -20,486 +21,1358 @@ namespace MoneyKeeper.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("MoneyKeeper.Models.Budget", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
+                b.Property<int>("CategoryId")
+                    .HasColumnType("int");
 
-                    b.Property<int>("CreatorId")
-                        .HasColumnType("int");
+                b.Property<DateTime?>("CreatedAt")
+                    .HasColumnType("datetime(6)");
 
-                    b.Property<int>("LimitAmount")
-                        .HasColumnType("int");
+                b.Property<int>("CreatorId")
+                    .HasColumnType("int");
 
-                    b.Property<int>("Month")
-                        .HasColumnType("int");
+                b.Property<int>("LimitAmount")
+                    .HasColumnType("int");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<int>("Month")
+                    .HasColumnType("int");
 
-                    b.Property<int>("SpentAmount")
-                        .HasColumnType("int");
+                b.Property<int>("SpentAmount")
+                    .HasColumnType("int");
 
-                    b.Property<int>("WalletId")
-                        .HasColumnType("int");
+                b.Property<DateTime?>("UpdatedAt")
+                    .HasColumnType("datetime(6)");
 
-                    b.Property<int>("Year")
-                        .HasColumnType("int");
+                b.Property<int>("WalletId")
+                    .HasColumnType("int");
 
-                    b.HasKey("Id");
+                b.Property<int>("Year")
+                    .HasColumnType("int");
 
-                    b.HasIndex("CategoryId");
+                b.HasKey("Id");
 
-                    b.HasIndex("CreatorId");
+                b.HasIndex("CategoryId");
 
-                    b.HasIndex("WalletId");
+                b.HasIndex("CreatorId");
 
-                    b.ToTable("Budget");
-                });
+                b.HasIndex("WalletId");
+
+                b.HasIndex("Month", "Year");
+
+                b.ToTable("Budget");
+            });
 
             modelBuilder.Entity("MoneyKeeper.Models.Category", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    b.Property<int>("CreatorId")
-                        .HasColumnType("int");
+                b.Property<int>("Group")
+                    .HasColumnType("int");
 
-                    b.Property<string>("Icon")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("Icon")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                b.Property<int>("Type")
+                    .HasColumnType("int");
 
-                    b.Property<int>("WalletId")
-                        .HasColumnType("int");
+                b.Property<int?>("WalletId")
+                    .HasColumnType("int");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("CreatorId");
+                b.HasIndex("WalletId");
 
-                    b.HasIndex("WalletId");
+                b.ToTable("Category");
 
-                    b.ToTable("Category");
-                });
+                b.HasData(
+                    new
+                    {
+                        Id = 1,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Ăn uống",
+                        Type = 1
+                    },
+                    new
+                    {
+                        Id = 2,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Di chuyển",
+                        Type = 1
+                    },
+                    new
+                    {
+                        Id = 3,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Thuê nhà",
+                        Type = 1
+                    },
+                    new
+                    {
+                        Id = 4,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Hóa đơn điện thoại",
+                        Type = 1
+                    },
+                    new
+                    {
+                        Id = 5,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Hóa đơn internet",
+                        Type = 1
+                    },
+                    new
+                    {
+                        Id = 6,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Hóa đơn tiện ích khác",
+                        Type = 1
+                    },
+                    new
+                    {
+                        Id = 7,
+                        Group = 2,
+                        Icon = "1",
+                        Name = "Sửa & trang trí khác",
+                        Type = 1
+                    },
+                    new
+                    {
+                        Id = 8,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Bảo dưỡng xe",
+                        Type = 1
+                    },
+                    new
+                    {
+                        Id = 9,
+                        Group = 2,
+                        Icon = "1",
+                        Name = "Khám sức khỏe",
+                        Type = 1
+                    },
+                    new
+                    {
+                        Id = 10,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Thể dục thể thao",
+                        Type = 1
+                    },
+                    new
+                    {
+                        Id = 11,
+                        Group = 0,
+                        Icon = "1",
+                        Name = "Lương",
+                        Type = 0
+                    },
+                    new
+                    {
+                        Id = 12,
+                        Group = 0,
+                        Icon = "1",
+                        Name = "Tiền ăn vặt",
+                        Type = 0
+                    },
+                    new
+                    {
+                        Id = 13,
+                        Group = 0,
+                        Icon = "1",
+                        Name = "Thu nhập khác",
+                        Type = 0
+                    },
+                    new
+                    {
+                        Id = 14,
+                        Group = 4,
+                        Icon = "1",
+                        Name = "Đầu tư",
+                        Type = 1
+                    },
+                    new
+                    {
+                        Id = 15,
+                        Group = 4,
+                        Icon = "1",
+                        Name = "Nợ",
+                        Type = 1
+                    },
+                    new
+                    {
+                        Id = 16,
+                        Group = 4,
+                        Icon = "1",
+                        Name = "Cho vay",
+                        Type = 1
+                    },
+                    new
+                    {
+                        Id = 17,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Ăn uống",
+                        Type = 1,
+                        WalletId = 1
+                    },
+                    new
+                    {
+                        Id = 18,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Di chuyển",
+                        Type = 1,
+                        WalletId = 1
+                    },
+                    new
+                    {
+                        Id = 19,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Thuê nhà",
+                        Type = 1,
+                        WalletId = 1
+                    },
+                    new
+                    {
+                        Id = 20,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Hóa đơn điện thoại",
+                        Type = 1,
+                        WalletId = 1
+                    },
+                    new
+                    {
+                        Id = 21,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Hóa đơn internet",
+                        Type = 1,
+                        WalletId = 1
+                    },
+                    new
+                    {
+                        Id = 22,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Hóa đơn tiện ích khác",
+                        Type = 1,
+                        WalletId = 1
+                    },
+                    new
+                    {
+                        Id = 23,
+                        Group = 2,
+                        Icon = "1",
+                        Name = "Sửa & trang trí khác",
+                        Type = 1,
+                        WalletId = 1
+                    },
+                    new
+                    {
+                        Id = 24,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Bảo dưỡng xe",
+                        Type = 1,
+                        WalletId = 1
+                    },
+                    new
+                    {
+                        Id = 25,
+                        Group = 2,
+                        Icon = "1",
+                        Name = "Khám sức khỏe",
+                        Type = 1,
+                        WalletId = 1
+                    },
+                    new
+                    {
+                        Id = 26,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Thể dục thể thao",
+                        Type = 1,
+                        WalletId = 1
+                    },
+                    new
+                    {
+                        Id = 27,
+                        Group = 0,
+                        Icon = "1",
+                        Name = "Lương",
+                        Type = 0,
+                        WalletId = 1
+                    },
+                    new
+                    {
+                        Id = 28,
+                        Group = 0,
+                        Icon = "1",
+                        Name = "Tiền ăn vặt",
+                        Type = 0,
+                        WalletId = 1
+                    },
+                    new
+                    {
+                        Id = 29,
+                        Group = 0,
+                        Icon = "1",
+                        Name = "Thu nhập khác",
+                        Type = 0,
+                        WalletId = 1
+                    },
+                    new
+                    {
+                        Id = 30,
+                        Group = 4,
+                        Icon = "1",
+                        Name = "Đầu tư",
+                        Type = 1,
+                        WalletId = 1
+                    },
+                    new
+                    {
+                        Id = 31,
+                        Group = 4,
+                        Icon = "1",
+                        Name = "Nợ",
+                        Type = 1,
+                        WalletId = 1
+                    },
+                    new
+                    {
+                        Id = 32,
+                        Group = 4,
+                        Icon = "1",
+                        Name = "Cho vay",
+                        Type = 1,
+                        WalletId = 1
+                    },
+                    new
+                    {
+                        Id = 33,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Ăn uống",
+                        Type = 1,
+                        WalletId = 2
+                    },
+                    new
+                    {
+                        Id = 34,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Di chuyển",
+                        Type = 1,
+                        WalletId = 2
+                    },
+                    new
+                    {
+                        Id = 35,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Thuê nhà",
+                        Type = 1,
+                        WalletId = 2
+                    },
+                    new
+                    {
+                        Id = 36,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Hóa đơn điện thoại",
+                        Type = 1,
+                        WalletId = 2
+                    },
+                    new
+                    {
+                        Id = 37,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Hóa đơn internet",
+                        Type = 1,
+                        WalletId = 2
+                    },
+                    new
+                    {
+                        Id = 38,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Hóa đơn tiện ích khác",
+                        Type = 1,
+                        WalletId = 2
+                    },
+                    new
+                    {
+                        Id = 39,
+                        Group = 2,
+                        Icon = "1",
+                        Name = "Sửa & trang trí khác",
+                        Type = 1,
+                        WalletId = 2
+                    },
+                    new
+                    {
+                        Id = 40,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Bảo dưỡng xe",
+                        Type = 1,
+                        WalletId = 2
+                    },
+                    new
+                    {
+                        Id = 41,
+                        Group = 2,
+                        Icon = "1",
+                        Name = "Khám sức khỏe",
+                        Type = 1,
+                        WalletId = 2
+                    },
+                    new
+                    {
+                        Id = 42,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Thể dục thể thao",
+                        Type = 1,
+                        WalletId = 2
+                    },
+                    new
+                    {
+                        Id = 43,
+                        Group = 0,
+                        Icon = "1",
+                        Name = "Lương",
+                        Type = 0,
+                        WalletId = 2
+                    },
+                    new
+                    {
+                        Id = 44,
+                        Group = 0,
+                        Icon = "1",
+                        Name = "Tiền ăn vặt",
+                        Type = 0,
+                        WalletId = 2
+                    },
+                    new
+                    {
+                        Id = 45,
+                        Group = 0,
+                        Icon = "1",
+                        Name = "Thu nhập khác",
+                        Type = 0,
+                        WalletId = 2
+                    },
+                    new
+                    {
+                        Id = 46,
+                        Group = 4,
+                        Icon = "1",
+                        Name = "Đầu tư",
+                        Type = 1,
+                        WalletId = 2
+                    },
+                    new
+                    {
+                        Id = 47,
+                        Group = 4,
+                        Icon = "1",
+                        Name = "Nợ",
+                        Type = 1,
+                        WalletId = 2
+                    },
+                    new
+                    {
+                        Id = 48,
+                        Group = 4,
+                        Icon = "1",
+                        Name = "Cho vay",
+                        Type = 1,
+                        WalletId = 2
+                    },
+                    new
+                    {
+                        Id = 49,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Ăn uống",
+                        Type = 1,
+                        WalletId = 3
+                    },
+                    new
+                    {
+                        Id = 50,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Di chuyển",
+                        Type = 1,
+                        WalletId = 3
+                    },
+                    new
+                    {
+                        Id = 51,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Thuê nhà",
+                        Type = 1,
+                        WalletId = 3
+                    },
+                    new
+                    {
+                        Id = 52,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Hóa đơn điện thoại",
+                        Type = 1,
+                        WalletId = 3
+                    },
+                    new
+                    {
+                        Id = 53,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Hóa đơn internet",
+                        Type = 1,
+                        WalletId = 3
+                    },
+                    new
+                    {
+                        Id = 54,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Hóa đơn tiện ích khác",
+                        Type = 1,
+                        WalletId = 3
+                    },
+                    new
+                    {
+                        Id = 55,
+                        Group = 2,
+                        Icon = "1",
+                        Name = "Sửa & trang trí khác",
+                        Type = 1,
+                        WalletId = 3
+                    },
+                    new
+                    {
+                        Id = 56,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Bảo dưỡng xe",
+                        Type = 1,
+                        WalletId = 3
+                    },
+                    new
+                    {
+                        Id = 57,
+                        Group = 2,
+                        Icon = "1",
+                        Name = "Khám sức khỏe",
+                        Type = 1,
+                        WalletId = 3
+                    },
+                    new
+                    {
+                        Id = 58,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Thể dục thể thao",
+                        Type = 1,
+                        WalletId = 3
+                    },
+                    new
+                    {
+                        Id = 59,
+                        Group = 0,
+                        Icon = "1",
+                        Name = "Lương",
+                        Type = 0,
+                        WalletId = 3
+                    },
+                    new
+                    {
+                        Id = 60,
+                        Group = 0,
+                        Icon = "1",
+                        Name = "Tiền ăn vặt",
+                        Type = 0,
+                        WalletId = 3
+                    },
+                    new
+                    {
+                        Id = 61,
+                        Group = 0,
+                        Icon = "1",
+                        Name = "Thu nhập khác",
+                        Type = 0,
+                        WalletId = 3
+                    },
+                    new
+                    {
+                        Id = 62,
+                        Group = 4,
+                        Icon = "1",
+                        Name = "Đầu tư",
+                        Type = 1,
+                        WalletId = 3
+                    },
+                    new
+                    {
+                        Id = 63,
+                        Group = 4,
+                        Icon = "1",
+                        Name = "Nợ",
+                        Type = 1,
+                        WalletId = 3
+                    },
+                    new
+                    {
+                        Id = 64,
+                        Group = 4,
+                        Icon = "1",
+                        Name = "Cho vay",
+                        Type = 1,
+                        WalletId = 3
+                    },
+                    new
+                    {
+                        Id = 65,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Ăn uống",
+                        Type = 1,
+                        WalletId = 4
+                    },
+                    new
+                    {
+                        Id = 66,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Di chuyển",
+                        Type = 1,
+                        WalletId = 4
+                    },
+                    new
+                    {
+                        Id = 67,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Thuê nhà",
+                        Type = 1,
+                        WalletId = 4
+                    },
+                    new
+                    {
+                        Id = 68,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Hóa đơn điện thoại",
+                        Type = 1,
+                        WalletId = 4
+                    },
+                    new
+                    {
+                        Id = 69,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Hóa đơn internet",
+                        Type = 1,
+                        WalletId = 4
+                    },
+                    new
+                    {
+                        Id = 70,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Hóa đơn tiện ích khác",
+                        Type = 1,
+                        WalletId = 4
+                    },
+                    new
+                    {
+                        Id = 71,
+                        Group = 2,
+                        Icon = "1",
+                        Name = "Sửa & trang trí khác",
+                        Type = 1,
+                        WalletId = 4
+                    },
+                    new
+                    {
+                        Id = 72,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Bảo dưỡng xe",
+                        Type = 1,
+                        WalletId = 4
+                    },
+                    new
+                    {
+                        Id = 73,
+                        Group = 2,
+                        Icon = "1",
+                        Name = "Khám sức khỏe",
+                        Type = 1,
+                        WalletId = 4
+                    },
+                    new
+                    {
+                        Id = 74,
+                        Group = 1,
+                        Icon = "1",
+                        Name = "Thể dục thể thao",
+                        Type = 1,
+                        WalletId = 4
+                    },
+                    new
+                    {
+                        Id = 75,
+                        Group = 0,
+                        Icon = "1",
+                        Name = "Lương",
+                        Type = 0,
+                        WalletId = 4
+                    },
+                    new
+                    {
+                        Id = 76,
+                        Group = 0,
+                        Icon = "1",
+                        Name = "Tiền ăn vặt",
+                        Type = 0,
+                        WalletId = 4
+                    },
+                    new
+                    {
+                        Id = 77,
+                        Group = 0,
+                        Icon = "1",
+                        Name = "Thu nhập khác",
+                        Type = 0,
+                        WalletId = 4
+                    },
+                    new
+                    {
+                        Id = 78,
+                        Group = 4,
+                        Icon = "1",
+                        Name = "Đầu tư",
+                        Type = 1,
+                        WalletId = 4
+                    },
+                    new
+                    {
+                        Id = 79,
+                        Group = 4,
+                        Icon = "1",
+                        Name = "Nợ",
+                        Type = 1,
+                        WalletId = 4
+                    },
+                    new
+                    {
+                        Id = 80,
+                        Group = 4,
+                        Icon = "1",
+                        Name = "Cho vay",
+                        Type = 1,
+                        WalletId = 4
+                    });
+            });
 
             modelBuilder.Entity("MoneyKeeper.Models.Event", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    b.Property<int>("CreatorId")
-                        .HasColumnType("int");
+                b.Property<DateTime?>("CreatedAt")
+                    .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime(6)");
+                b.Property<int>("CreatorId")
+                    .HasColumnType("int");
 
-                    b.Property<string>("Icon")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<DateTime?>("EndDate")
+                    .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("Icon")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime(6)");
+                b.Property<bool>("IsFinished")
+                    .HasColumnType("tinyint(1)");
 
-                    b.Property<int?>("WalletId")
-                        .HasColumnType("int");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.HasKey("Id");
+                b.Property<long>("SpentAmount")
+                    .HasColumnType("bigint");
 
-                    b.HasIndex("CreatorId");
+                b.Property<DateTime?>("UpdatedAt")
+                    .HasColumnType("datetime(6)");
 
-                    b.HasIndex("WalletId");
+                b.Property<int?>("WalletId")
+                    .HasColumnType("int");
 
-                    b.ToTable("Event");
-                });
+                b.HasKey("Id");
+
+                b.HasIndex("CreatorId");
+
+                b.HasIndex("WalletId");
+
+                b.ToTable("Event");
+            });
+
+            modelBuilder.Entity("MoneyKeeper.Models.Invitation", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
+
+                b.Property<DateTime>("CreatedAt")
+                    .HasColumnType("datetime(6)");
+
+                b.Property<DateTime>("ExpirationDate")
+                    .HasColumnType("datetime(6)");
+
+                b.Property<int>("SenderId")
+                    .HasColumnType("int");
+
+                b.Property<int>("Status")
+                    .HasColumnType("int");
+
+                b.Property<int>("UserId")
+                    .HasColumnType("int");
+
+                b.Property<int>("WalletId")
+                    .HasColumnType("int");
+
+                b.HasKey("Id");
+
+                b.HasIndex("SenderId");
+
+                b.HasIndex("UserId");
+
+                b.HasIndex("WalletId");
+
+                b.ToTable("Invitation");
+            });
+
+            modelBuilder.Entity("MoneyKeeper.Models.Notification", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
+
+                b.Property<int?>("BudgetId")
+                    .HasColumnType("int");
+
+                b.Property<DateTime>("CreatedAt")
+                    .HasColumnType("datetime(6)");
+
+                b.Property<string>("Description")
+                    .IsRequired()
+                    .HasColumnType("longtext");
+
+                b.Property<int?>("InvitationId")
+                    .HasColumnType("int");
+
+                b.Property<int?>("TransactionId")
+                    .HasColumnType("int");
+
+                b.Property<int>("Type")
+                    .HasColumnType("int");
+
+                b.Property<int>("UserId")
+                    .HasColumnType("int");
+
+                b.Property<int?>("WalletId")
+                    .HasColumnType("int");
+
+                b.HasKey("Id");
+
+                b.HasIndex("BudgetId");
+
+                b.HasIndex("InvitationId");
+
+                b.HasIndex("TransactionId");
+
+                b.HasIndex("UserId");
+
+                b.HasIndex("WalletId");
+
+                b.ToTable("Notification");
+            });
 
             modelBuilder.Entity("MoneyKeeper.Models.Settings", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    b.Property<string>("Language")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("Language")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.Property<int>("Mode")
-                        .HasColumnType("int");
+                b.Property<int>("Mode")
+                    .HasColumnType("int");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                b.Property<int>("UserId")
+                    .HasColumnType("int");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                b.HasIndex("UserId")
+                    .IsUnique();
 
-                    b.ToTable("Settings");
-                });
+                b.ToTable("Settings");
+            });
 
             modelBuilder.Entity("MoneyKeeper.Models.Transaction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
+                b.Property<int>("Amount")
+                    .HasColumnType("int");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
+                b.Property<int>("CategoryId")
+                    .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
+                b.Property<DateTime>("CreatedAt")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("datetime(6)")
+                    .HasDefaultValueSql("UTC_TIMESTAMP()");
 
-                    b.Property<int>("CreatorId")
-                        .HasColumnType("int");
+                b.Property<int>("CreatorId")
+                    .HasColumnType("int");
 
-                    b.Property<int>("EventId")
-                        .HasColumnType("int");
+                b.Property<int?>("EventId")
+                    .HasColumnType("int");
 
-                    b.Property<string>("Note")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("Image")
+                    .HasColumnType("longtext");
 
-                    b.Property<int>("WalletId")
-                        .HasColumnType("int");
+                b.Property<string>("Note")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.HasKey("Id");
+                b.Property<string>("ParticipantIds")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.HasIndex("CategoryId");
+                b.Property<int>("WalletId")
+                    .HasColumnType("int");
 
-                    b.HasIndex("CreatorId");
+                b.HasKey("Id");
 
-                    b.HasIndex("EventId");
+                b.HasIndex("CategoryId");
 
-                    b.HasIndex("WalletId");
+                b.HasIndex("CreatorId");
 
-                    b.ToTable("Transactions");
-                });
+                b.HasIndex("EventId");
+
+                b.HasIndex("WalletId");
+
+                b.ToTable("Transactions");
+            });
 
             modelBuilder.Entity("MoneyKeeper.Models.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("Avatar")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("Email")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.HasKey("Id");
+                b.Property<string>("Password")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.ToTable("User");
+                b.HasKey("Id");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Email = "test@gmail.com",
-                            Password = "123123123"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Email = "test2@gmail.com",
-                            Password = "123123123"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Email = "test3@gmail.com",
-                            Password = "123123123"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Email = "test4@gmail.com",
-                            Password = "123123123"
-                        });
-                });
+                b.ToTable("User");
+
+                b.HasData(
+                    new
+                    {
+                        Id = 1,
+                        Avatar = "https://t4.ftcdn.net/jpg/02/23/50/73/360_F_223507349_F5RFU3kL6eMt5LijOaMbWLeHUTv165CB.jpg",
+                        Email = "test@gmail.com",
+                        Password = "123123123"
+                    },
+                    new
+                    {
+                        Id = 2,
+                        Avatar = "https://t4.ftcdn.net/jpg/02/23/50/73/360_F_223507349_F5RFU3kL6eMt5LijOaMbWLeHUTv165CB.jpg",
+                        Email = "test2@gmail.com",
+                        Password = "123123123"
+                    },
+                    new
+                    {
+                        Id = 3,
+                        Avatar = "https://t4.ftcdn.net/jpg/02/23/50/73/360_F_223507349_F5RFU3kL6eMt5LijOaMbWLeHUTv165CB.jpg",
+                        Email = "test3@gmail.com",
+                        Password = "123123123"
+                    },
+                    new
+                    {
+                        Id = 4,
+                        Avatar = "https://t4.ftcdn.net/jpg/02/23/50/73/360_F_223507349_F5RFU3kL6eMt5LijOaMbWLeHUTv165CB.jpg",
+                        Email = "test4@gmail.com",
+                        Password = "123123123"
+                    });
+            });
 
             modelBuilder.Entity("MoneyKeeper.Models.Wallet", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    b.Property<int>("Balance")
-                        .HasColumnType("int");
+                b.Property<int>("Balance")
+                    .HasColumnType("int");
 
-                    b.Property<string>("Icon")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("Icon")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.Property<bool>("IsDefault")
-                        .HasColumnType("tinyint(1)");
+                b.Property<bool>("IsDefault")
+                    .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasColumnType("longtext");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                b.Property<int>("Type")
+                    .HasColumnType("int");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("Wallet");
+                b.ToTable("Wallet");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Balance = 100000,
-                            Icon = "",
-                            IsDefault = true,
-                            Name = "Ví",
-                            Type = 0
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Balance = 200000,
-                            Icon = "",
-                            IsDefault = true,
-                            Name = "Ví",
-                            Type = 0
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Balance = 300000,
-                            Icon = "",
-                            IsDefault = true,
-                            Name = "Ví",
-                            Type = 0
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Balance = 400000,
-                            Icon = "",
-                            IsDefault = true,
-                            Name = "Ví",
-                            Type = 0
-                        });
-                });
+                b.HasData(
+                    new
+                    {
+                        Id = 1,
+                        Balance = 100000,
+                        Icon = "",
+                        IsDefault = true,
+                        Name = "Ví",
+                        Type = 0
+                    },
+                    new
+                    {
+                        Id = 2,
+                        Balance = 200000,
+                        Icon = "",
+                        IsDefault = true,
+                        Name = "Ví",
+                        Type = 0
+                    },
+                    new
+                    {
+                        Id = 3,
+                        Balance = 300000,
+                        Icon = "",
+                        IsDefault = true,
+                        Name = "Ví",
+                        Type = 0
+                    },
+                    new
+                    {
+                        Id = 4,
+                        Balance = 400000,
+                        Icon = "",
+                        IsDefault = true,
+                        Name = "Ví",
+                        Type = 0
+                    });
+            });
 
             modelBuilder.Entity("MoneyKeeper.Models.WalletMember", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+            {
+                b.Property<int>("UserId")
+                    .HasColumnType("int");
 
-                    b.Property<int>("WalletId")
-                        .HasColumnType("int");
+                b.Property<int>("WalletId")
+                    .HasColumnType("int");
 
-                    b.Property<DateTime>("JoinAt")
-                        .HasColumnType("datetime(6)");
+                b.Property<DateTime>("JoinAt")
+                    .HasColumnType("datetime(6)");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
+                b.Property<int>("Role")
+                    .HasColumnType("int");
 
-                    b.HasKey("UserId", "WalletId");
+                b.Property<int>("Status")
+                    .HasColumnType("int");
 
-                    b.HasIndex("WalletId");
+                b.HasKey("UserId", "WalletId");
 
-                    b.ToTable("WalletMember");
+                b.HasIndex("WalletId");
 
-                    b.HasData(
-                        new
-                        {
-                            UserId = 1,
-                            WalletId = 1,
-                            JoinAt = new DateTime(2022, 12, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Role = 0
-                        },
-                        new
-                        {
-                            UserId = 2,
-                            WalletId = 2,
-                            JoinAt = new DateTime(2022, 12, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Role = 0
-                        },
-                        new
-                        {
-                            UserId = 3,
-                            WalletId = 3,
-                            JoinAt = new DateTime(2022, 12, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Role = 0
-                        },
-                        new
-                        {
-                            UserId = 4,
-                            WalletId = 4,
-                            JoinAt = new DateTime(2022, 12, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Role = 0
-                        });
-                });
+                b.ToTable("WalletMember");
+
+                b.HasData(
+                    new
+                    {
+                        UserId = 1,
+                        WalletId = 1,
+                        JoinAt = new DateTime(2022, 12, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                        Role = 0,
+                        Status = 2
+                    },
+                    new
+                    {
+                        UserId = 2,
+                        WalletId = 2,
+                        JoinAt = new DateTime(2022, 12, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                        Role = 0,
+                        Status = 2
+                    },
+                    new
+                    {
+                        UserId = 3,
+                        WalletId = 3,
+                        JoinAt = new DateTime(2022, 12, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                        Role = 0,
+                        Status = 2
+                    },
+                    new
+                    {
+                        UserId = 4,
+                        WalletId = 4,
+                        JoinAt = new DateTime(2022, 12, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                        Role = 0,
+                        Status = 2
+                    });
+            });
 
             modelBuilder.Entity("MoneyKeeper.Models.Budget", b =>
-                {
-                    b.HasOne("MoneyKeeper.Models.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            {
+                b.HasOne("MoneyKeeper.Models.Category", "Category")
+                    .WithMany()
+                    .HasForeignKey("CategoryId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.HasOne("MoneyKeeper.Models.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                b.HasOne("MoneyKeeper.Models.User", "Creator")
+                    .WithMany()
+                    .HasForeignKey("CreatorId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.HasOne("MoneyKeeper.Models.Wallet", "Wallet")
-                        .WithMany()
-                        .HasForeignKey("WalletId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                b.HasOne("MoneyKeeper.Models.Wallet", "Wallet")
+                    .WithMany()
+                    .HasForeignKey("WalletId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.Navigation("Category");
+                b.Navigation("Category");
 
-                    b.Navigation("Creator");
+                b.Navigation("Creator");
 
-                    b.Navigation("Wallet");
-                });
+                b.Navigation("Wallet");
+            });
 
             modelBuilder.Entity("MoneyKeeper.Models.Category", b =>
-                {
-                    b.HasOne("MoneyKeeper.Models.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            {
+                b.HasOne("MoneyKeeper.Models.Wallet", "Wallet")
+                    .WithMany()
+                    .HasForeignKey("WalletId");
 
-                    b.HasOne("MoneyKeeper.Models.Wallet", "Wallet")
-                        .WithMany()
-                        .HasForeignKey("WalletId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Creator");
-
-                    b.Navigation("Wallet");
-                });
+                b.Navigation("Wallet");
+            });
 
             modelBuilder.Entity("MoneyKeeper.Models.Event", b =>
-                {
-                    b.HasOne("MoneyKeeper.Models.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            {
+                b.HasOne("MoneyKeeper.Models.User", "Creator")
+                    .WithMany()
+                    .HasForeignKey("CreatorId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.HasOne("MoneyKeeper.Models.Wallet", "Wallet")
-                        .WithMany()
-                        .HasForeignKey("WalletId");
+                b.HasOne("MoneyKeeper.Models.Wallet", "Wallet")
+                    .WithMany()
+                    .HasForeignKey("WalletId");
 
-                    b.Navigation("Creator");
+                b.Navigation("Creator");
 
-                    b.Navigation("Wallet");
-                });
+                b.Navigation("Wallet");
+            });
+
+            modelBuilder.Entity("MoneyKeeper.Models.Invitation", b =>
+            {
+                b.HasOne("MoneyKeeper.Models.User", "Sender")
+                    .WithMany()
+                    .HasForeignKey("SenderId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                b.HasOne("MoneyKeeper.Models.User", "User")
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                b.HasOne("MoneyKeeper.Models.Wallet", "Wallet")
+                    .WithMany()
+                    .HasForeignKey("WalletId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                b.Navigation("Sender");
+
+                b.Navigation("User");
+
+                b.Navigation("Wallet");
+            });
+
+            modelBuilder.Entity("MoneyKeeper.Models.Notification", b =>
+            {
+                b.HasOne("MoneyKeeper.Models.Budget", "Budget")
+                    .WithMany()
+                    .HasForeignKey("BudgetId");
+
+                b.HasOne("MoneyKeeper.Models.Invitation", "Invitation")
+                    .WithMany()
+                    .HasForeignKey("InvitationId");
+
+                b.HasOne("MoneyKeeper.Models.Transaction", "Transaction")
+                    .WithMany()
+                    .HasForeignKey("TransactionId");
+
+                b.HasOne("MoneyKeeper.Models.User", "User")
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                b.HasOne("MoneyKeeper.Models.Wallet", "Wallet")
+                    .WithMany()
+                    .HasForeignKey("WalletId");
+
+                b.Navigation("Budget");
+
+                b.Navigation("Invitation");
+
+                b.Navigation("Transaction");
+
+                b.Navigation("User");
+
+                b.Navigation("Wallet");
+            });
 
             modelBuilder.Entity("MoneyKeeper.Models.Settings", b =>
-                {
-                    b.HasOne("MoneyKeeper.Models.User", "User")
-                        .WithOne("Settings")
-                        .HasForeignKey("MoneyKeeper.Models.Settings", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            {
+                b.HasOne("MoneyKeeper.Models.User", "User")
+                    .WithOne("Settings")
+                    .HasForeignKey("MoneyKeeper.Models.Settings", "UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.Navigation("User");
-                });
+                b.Navigation("User");
+            });
 
             modelBuilder.Entity("MoneyKeeper.Models.Transaction", b =>
-                {
-                    b.HasOne("MoneyKeeper.Models.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            {
+                b.HasOne("MoneyKeeper.Models.Category", "Category")
+                    .WithMany()
+                    .HasForeignKey("CategoryId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.HasOne("MoneyKeeper.Models.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                b.HasOne("MoneyKeeper.Models.User", "Creator")
+                    .WithMany()
+                    .HasForeignKey("CreatorId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.HasOne("MoneyKeeper.Models.Event", "Event")
-                        .WithMany("Transactions")
-                        .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                b.HasOne("MoneyKeeper.Models.Event", "Event")
+                    .WithMany("Transactions")
+                    .HasForeignKey("EventId");
 
-                    b.HasOne("MoneyKeeper.Models.Wallet", "Wallet")
-                        .WithMany()
-                        .HasForeignKey("WalletId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                b.HasOne("MoneyKeeper.Models.Wallet", "Wallet")
+                    .WithMany()
+                    .HasForeignKey("WalletId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.Navigation("Category");
+                b.Navigation("Category");
 
-                    b.Navigation("Creator");
+                b.Navigation("Creator");
 
-                    b.Navigation("Event");
+                b.Navigation("Event");
 
-                    b.Navigation("Wallet");
-                });
+                b.Navigation("Wallet");
+            });
 
             modelBuilder.Entity("MoneyKeeper.Models.WalletMember", b =>
-                {
-                    b.HasOne("MoneyKeeper.Models.Wallet", "Wallet")
-                        .WithMany("WalletMembers")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            {
+                b.HasOne("MoneyKeeper.Models.User", "User")
+                    .WithMany("WalletMembers")
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.HasOne("MoneyKeeper.Models.User", "User")
-                        .WithMany("WalletMembers")
-                        .HasForeignKey("WalletId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                b.HasOne("MoneyKeeper.Models.Wallet", "Wallet")
+                    .WithMany("WalletMembers")
+                    .HasForeignKey("WalletId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.Navigation("User");
+                b.Navigation("User");
 
-                    b.Navigation("Wallet");
-                });
+                b.Navigation("Wallet");
+            });
 
             modelBuilder.Entity("MoneyKeeper.Models.Event", b =>
-                {
-                    b.Navigation("Transactions");
-                });
+            {
+                b.Navigation("Transactions");
+            });
 
             modelBuilder.Entity("MoneyKeeper.Models.User", b =>
-                {
-                    b.Navigation("Settings")
-                        .IsRequired();
+            {
+                b.Navigation("Settings")
+                    .IsRequired();
 
-                    b.Navigation("WalletMembers");
-                });
+                b.Navigation("WalletMembers");
+            });
 
             modelBuilder.Entity("MoneyKeeper.Models.Wallet", b =>
-                {
-                    b.Navigation("WalletMembers");
-                });
+            {
+                b.Navigation("WalletMembers");
+            });
 #pragma warning restore 612, 618
         }
     }

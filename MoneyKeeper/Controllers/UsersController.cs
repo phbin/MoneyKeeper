@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MoneyKeeper.Attributes;
+using MoneyKeeper.Data;
+using MoneyKeeper.Dtos.User;
 using MoneyKeeper.Models;
 using System;
 using System.Linq;
@@ -13,19 +16,21 @@ namespace MoneyKeeper.Controllers
     public class UserController : Controller
     {
         public DataContext _context { get; set; }
-        public UserController(DataContext context)
+        public IMapper _mapper { get; set; }
+        public UserController(DataContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        [Protect]
-        [HttpGet]
-        public async Task<IActionResult> GetUser()
+
+        [HttpGet("search")]
+        public async Task<IActionResult> GetUser([EmailAddress] string email)
         {
-            return Ok(new
-            {
-                data = await _context.Users.OrderBy(u => u.Id).ToListAsync()
-            });
+            var user = await _context.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
+
+            var userDto = _mapper.Map<BasicUserDto>(user);
+            return Ok(new ApiResponse<BasicUserDto>(userDto, "search users by email"));
         }
     }
 }

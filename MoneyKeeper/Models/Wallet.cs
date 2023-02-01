@@ -24,7 +24,6 @@ namespace MoneyKeeper.Models
         public bool IsDefault{ get; set; }
         public WalletType Type { get; set; }
         public ICollection<User>  Members{ get; set; }
-        [NotMapped]
         public ICollection<WalletMember> WalletMembers { get; set; }
 
         public class WalletConfiguration : IEntityTypeConfiguration<Wallet>

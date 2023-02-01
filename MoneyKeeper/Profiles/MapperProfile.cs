@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using MoneyKeeper.Dtos;
+using MoneyKeeper.Dtos.User;
 using MoneyKeeper.Models;
 
 namespace MoneyKeeper.Profiles
@@ -15,6 +16,7 @@ namespace MoneyKeeper.Profiles
             CreateMap<UserDto, User>();
             CreateMap<RegisterUserDto, User>();
             CreateMap<LoginUserDto, User>();
+            CreateMap<User, BasicUserDto>();
         }
 
     }

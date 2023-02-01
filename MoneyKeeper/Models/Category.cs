@@ -12,15 +12,14 @@ namespace MoneyKeeper.Models
         public Category()
         {
             Name = String.Empty;
-            Icon = null;
+            Icon = String.Empty;
         }
         public int Id { get; set; }
         public string Name { get; set; }
-        public byte[] Icon { get; set; }
+        public string Icon { get; set; }
         public CategoryType Type { get; set; }
-        public int WalletId{get; set;}
+        public CategoryGroup Group { get; set; }
+        public int? WalletId{get; set;}
         public Wallet? Wallet{get; set;}
-        public int CreatorId{get; set;}
-        public User? Creator{get; set;}
     }
 }

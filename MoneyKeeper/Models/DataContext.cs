@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MoneyKeeper.Extensions;
-using MoneyKeeper.Models;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
@@ -19,17 +18,22 @@ namespace MoneyKeeper.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new TransactionConfiguration());
+            modelBuilder.ApplyConfiguration(new BudgetConfiguration());
 
             modelBuilder.Seed();
             //ChangeToUtcDate(modelBuilder);
         }
         public DbSet<User> Users => Set<User>();
-        public DbSet<Wallet> Wallets => Set<Wallet>();
+        public DbSet<Wallet> Wallets => Set<Wallet>(); 
+        public DbSet<WalletMember> WalletMembers => Set<WalletMember>();
         public DbSet<Category> Categories => Set<Category>();
         public DbSet<Transaction> Transactions => Set<Transaction>();
         public DbSet<Budget> Budgets => Set<Budget>();
         public DbSet<Event> Events => Set<Event>(); 
         public DbSet<Settings> Settings => Set<Settings>();
+        public DbSet<Notification> Notifcations => Set<Notification>();
+        public DbSet<Invitation> Invitations => Set<Invitation>();
         public override int SaveChanges()
         {
             AddTimestamps();
