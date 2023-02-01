@@ -1,9 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-#nullable disable
-
-namespace MochiApi.Migrations
+namespace MoneyKeeper.Migrations
 {
     public partial class BaseEntityForModel : Migration
     {

@@ -4,11 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MochiApi.Models;
+using MoneyKeeper.Models;
+
 
 #nullable disable
 
-namespace MochiApi.Migrations
+namespace MoneyKeeper.Migrations
 {
     [DbContext(typeof(DataContext))]
     [Migration("20230121033725_RemoveNameBudget")]
@@ -21,7 +22,7 @@ namespace MochiApi.Migrations
                 .HasAnnotation("ProductVersion", "6.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("MochiApi.Models.Budget", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.Budget", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -67,7 +68,7 @@ namespace MochiApi.Migrations
                     b.ToTable("Budget");
                 });
 
-            modelBuilder.Entity("MochiApi.Models.Category", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -803,7 +804,7 @@ namespace MochiApi.Migrations
                         });
                 });
 
-            modelBuilder.Entity("MochiApi.Models.Event", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.Event", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -844,7 +845,7 @@ namespace MochiApi.Migrations
                     b.ToTable("Event");
                 });
 
-            modelBuilder.Entity("MochiApi.Models.Settings", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.Settings", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -868,7 +869,7 @@ namespace MochiApi.Migrations
                     b.ToTable("Settings");
                 });
 
-            modelBuilder.Entity("MochiApi.Models.Transaction", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.Transaction", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -914,7 +915,7 @@ namespace MochiApi.Migrations
                     b.ToTable("Transactions");
                 });
 
-            modelBuilder.Entity("MochiApi.Models.User", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -959,7 +960,7 @@ namespace MochiApi.Migrations
                         });
                 });
 
-            modelBuilder.Entity("MochiApi.Models.Wallet", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.Wallet", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1025,7 +1026,7 @@ namespace MochiApi.Migrations
                         });
                 });
 
-            modelBuilder.Entity("MochiApi.Models.WalletMember", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.WalletMember", b =>
                 {
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -1076,21 +1077,21 @@ namespace MochiApi.Migrations
                         });
                 });
 
-            modelBuilder.Entity("MochiApi.Models.Budget", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.Budget", b =>
                 {
-                    b.HasOne("MochiApi.Models.Category", "Category")
+                    b.HasOne("MoneyKeeper.Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MochiApi.Models.User", "Creator")
+                    b.HasOne("MoneyKeeper.Models.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MochiApi.Models.Wallet", "Wallet")
+                    b.HasOne("MoneyKeeper.Models.Wallet", "Wallet")
                         .WithMany()
                         .HasForeignKey("WalletId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1103,24 +1104,24 @@ namespace MochiApi.Migrations
                     b.Navigation("Wallet");
                 });
 
-            modelBuilder.Entity("MochiApi.Models.Category", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.Category", b =>
                 {
-                    b.HasOne("MochiApi.Models.Wallet", "Wallet")
+                    b.HasOne("MoneyKeeper.Models.Wallet", "Wallet")
                         .WithMany()
                         .HasForeignKey("WalletId");
 
                     b.Navigation("Wallet");
                 });
 
-            modelBuilder.Entity("MochiApi.Models.Event", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.Event", b =>
                 {
-                    b.HasOne("MochiApi.Models.User", "Creator")
+                    b.HasOne("MoneyKeeper.Models.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MochiApi.Models.Wallet", "Wallet")
+                    b.HasOne("MoneyKeeper.Models.Wallet", "Wallet")
                         .WithMany()
                         .HasForeignKey("WalletId");
 
@@ -1129,36 +1130,36 @@ namespace MochiApi.Migrations
                     b.Navigation("Wallet");
                 });
 
-            modelBuilder.Entity("MochiApi.Models.Settings", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.Settings", b =>
                 {
-                    b.HasOne("MochiApi.Models.User", "User")
+                    b.HasOne("MoneyKeeper.Models.User", "User")
                         .WithOne("Settings")
-                        .HasForeignKey("MochiApi.Models.Settings", "UserId")
+                        .HasForeignKey("MoneyKeeper.Models.Settings", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MochiApi.Models.Transaction", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.Transaction", b =>
                 {
-                    b.HasOne("MochiApi.Models.Category", "Category")
+                    b.HasOne("MoneyKeeper.Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MochiApi.Models.User", "Creator")
+                    b.HasOne("MoneyKeeper.Models.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MochiApi.Models.Event", "Event")
+                    b.HasOne("MoneyKeeper.Models.Event", "Event")
                         .WithMany("Transactions")
                         .HasForeignKey("EventId");
 
-                    b.HasOne("MochiApi.Models.Wallet", "Wallet")
+                    b.HasOne("MoneyKeeper.Models.Wallet", "Wallet")
                         .WithMany()
                         .HasForeignKey("WalletId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1173,15 +1174,15 @@ namespace MochiApi.Migrations
                     b.Navigation("Wallet");
                 });
 
-            modelBuilder.Entity("MochiApi.Models.WalletMember", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.WalletMember", b =>
                 {
-                    b.HasOne("MochiApi.Models.User", "User")
+                    b.HasOne("MoneyKeeper.Models.User", "User")
                         .WithMany("WalletMembers")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MochiApi.Models.Wallet", "Wallet")
+                    b.HasOne("MoneyKeeper.Models.Wallet", "Wallet")
                         .WithMany("WalletMembers")
                         .HasForeignKey("WalletId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1192,12 +1193,12 @@ namespace MochiApi.Migrations
                     b.Navigation("Wallet");
                 });
 
-            modelBuilder.Entity("MochiApi.Models.Event", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.Event", b =>
                 {
                     b.Navigation("Transactions");
                 });
 
-            modelBuilder.Entity("MochiApi.Models.User", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.User", b =>
                 {
                     b.Navigation("Settings")
                         .IsRequired();
@@ -1205,7 +1206,7 @@ namespace MochiApi.Migrations
                     b.Navigation("WalletMembers");
                 });
 
-            modelBuilder.Entity("MochiApi.Models.Wallet", b =>
+            modelBuilder.Entity("MoneyKeeper.Models.Wallet", b =>
                 {
                     b.Navigation("WalletMembers");
                 });

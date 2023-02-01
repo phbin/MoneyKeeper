@@ -2,7 +2,8 @@
 
 #nullable disable
 
-namespace MochiApi.Migrations
+namespace MoneyKeeper.Migrations
+
 {
     public partial class GroupCategory : Migration
     {

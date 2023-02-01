@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using MySql.EntityFrameworkCore.Metadata;
+using MySql.Data.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
-namespace MochiApi.Migrations
+namespace MoneyKeeper.Migrations
 {
     public partial class Notification : Migration
     {

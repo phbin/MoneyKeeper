@@ -7,6 +7,7 @@ using MoneyKeeper.Dtos.User;
 using MoneyKeeper.Models;
 using System;
 using System.Linq;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace MoneyKeeper.Controllers
