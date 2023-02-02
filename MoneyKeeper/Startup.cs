@@ -13,6 +13,7 @@ using Microsoft.OpenApi.Models;
 using MoneyKeeper.Dtos.Settings;
 using MoneyKeeper.Models;
 using MoneyKeeper.Services.Auth;
+using MoneyKeeper.Services.Transactions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -44,7 +45,7 @@ namespace MoneyKeeper
             {
                 option.UseSqlServer(Configuration.GetConnectionString("MyDB"));
             });
-            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ITransactionService, TransactionService>();
 
             services.AddControllers();
             //swagger

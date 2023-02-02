@@ -11,11 +11,11 @@ namespace MoneyKeeper.Controllers
 {
     [ApiController]
     [Route("/api/categories")]
-    public class CategoryController : Controller
+    public class TransactionController : Controller
     {
         public ICategoryService _categoryService { get; set; }
         public IMapper _mapper { get; set; }
-        public CategoryController(ICategoryService category, DataContext context, IMapper mapper)
+        public TransactionController(ICategoryService category, DataContext context, IMapper mapper)
         {
             _categoryService = category;
             _mapper = mapper;

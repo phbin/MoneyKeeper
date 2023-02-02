@@ -12,6 +12,9 @@ using Microsoft.Extensions.DependencyInjection;
 using MoneyKeeper.Services.Auth;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
+using MoneyKeeper.Services.Category;
+using MoneyKeeper.Services.Event;
+using MoneyKeeper.Services.Transactions;
 
 namespace MoneyKeeper.Extensions
 {
@@ -31,6 +34,12 @@ namespace MoneyKeeper.Extensions
             .AddScoped<IAuthService, AuthService>()
             .AddScoped<IUserService, UserService>()
             .AddScoped<IMailService, MailService>()
+            .AddScoped<IMailService, MailService>()
+            .AddScoped<INotiService, NotiService>()
+            .AddScoped<IEventService, EventService>()
+            .AddScoped<IWalletService, WalletService>()
+            .AddScoped<ICategoryService, CategoryService>()
+            .AddScoped<ITransactionService, TransactionService>()
             .AddSingleton<IDictionary<string, string>>(_ => new Dictionary<string, string>());
         public static void ConfigureSwaggerOptions(this SwaggerGenOptions options)
         {

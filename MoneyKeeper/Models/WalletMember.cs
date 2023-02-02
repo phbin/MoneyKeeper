@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MoneyKeeper.Models;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using static MoneyKeeper.Common.Enum;
 
