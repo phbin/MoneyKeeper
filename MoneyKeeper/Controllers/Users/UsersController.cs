@@ -10,7 +10,7 @@ using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
-namespace MoneyKeeper.Controllers
+namespace MoneyKeeper.Controllers.Users
 {
     [ApiController]
     [Route("users")]

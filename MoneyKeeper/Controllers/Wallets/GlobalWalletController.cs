@@ -16,7 +16,7 @@ using System.Linq;
 using static MoneyKeeper.Common.Enum;
 using MoneyKeeper.Dtos.Category;
 
-namespace MoneyKeeper.Controllers
+namespace MoneyKeeper.Controllers.Wallets
 {
     [ApiController]
     [Route("api/global-wallets")]
@@ -91,7 +91,7 @@ namespace MoneyKeeper.Controllers
             return Ok(new ApiResponse<object>(new
             {
                 dailyReports = listDailyReport,
-                netIncome = netIncome,
+                netIncome,
             }, "Get report of wallet successfully!"));
         }
         [HttpGet("expense")]

@@ -12,7 +12,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using MoneyKeeper.Dtos.User;
 
-namespace MoneyKeeper.Controllers
+namespace MoneyKeeper.Controllers.Users
 {
     [ApiController]
     [Route("api/account")]

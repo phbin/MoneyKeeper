@@ -9,7 +9,7 @@ using MoneyKeeper.Services.Auth;
 using System;
 using System.Threading.Tasks;
 
-namespace MoneyKeeper.Controllers
+namespace MoneyKeeper.Controllers.Users
 {
     [ApiController]
     [Route("api/auth")]
@@ -29,7 +29,7 @@ namespace MoneyKeeper.Controllers
         [Produces(typeof(ApiResponse<UserDto>))]
         public async Task<IActionResult> Login([FromBody] LoginUserDto loginUser)
         {
-            (User? user, string? token) = await _auth.Login(loginUser);
+            (User? user, string token) = await _auth.Login(loginUser);
             var userDTO = _mapper.Map<UserDto>(user);
             userDTO.Token = token;
             return Ok(new ApiResponse<UserDto>(userDTO, "Login successfully"));
@@ -40,7 +40,7 @@ namespace MoneyKeeper.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterUserDto registerUser)
         {
             await _auth.Register(registerUser);
-            return Ok(new ApiResponse<string>(String.Empty, "Send email verification successfully"));
+            return Ok(new ApiResponse<string>(string.Empty, "Send email verification successfully"));
         }
 
         [HttpPost("verify-account")]
