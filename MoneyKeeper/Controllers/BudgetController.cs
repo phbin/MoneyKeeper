@@ -10,7 +10,6 @@ using MoneyKeeper.Dtos.User;
 using MoneyKeeper.Models;
 using MoneyKeeper.Services;
 using MoneyKeeper.Services.Auth;
-using MoneyKeeper.Services.Budget;
 using MoneyKeeper.Services.Category;
 using MoneyKeeper.Services.Transactions;
 using System;

@@ -1,7 +1,6 @@
 ﻿using MoneyKeeper.Dtos;
 using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MoneyKeeper.Hubs;
 using MoneyKeeper.Error;
@@ -11,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using static MoneyKeeper.Common.Enum;
+using Microsoft.EntityFrameworkCore;
 
 namespace MoneyKeeper.Services
 {

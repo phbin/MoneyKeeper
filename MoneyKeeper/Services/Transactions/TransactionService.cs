@@ -16,7 +16,6 @@ using MoneyKeeper.Data;
 using MoneyKeeper.Dtos;
 using MoneyKeeper.Dtos.Transaction;
 using MoneyKeeper.Services.Event;
-using MoneyKeeper.Services.Budget;
 using static MoneyKeeper.Common.Enum;
 
 namespace MoneyKeeper.Services.Transactions

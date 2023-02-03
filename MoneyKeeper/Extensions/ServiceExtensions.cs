@@ -1,5 +1,4 @@
-﻿
-using MoneyKeeper.Services.Mail;
+﻿using MoneyKeeper.Services.Mail;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MoneyKeeper.Error;
@@ -15,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using MoneyKeeper.Services.Category;
 using MoneyKeeper.Services.Event;
 using MoneyKeeper.Services.Transactions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace MoneyKeeper.Extensions
 {
@@ -39,6 +39,7 @@ namespace MoneyKeeper.Extensions
             .AddScoped<IEventService, EventService>()
             .AddScoped<IWalletService, WalletService>()
             .AddScoped<ICategoryService, CategoryService>()
+            .AddScoped<IBudgetService, BudgetService>()
             .AddScoped<ITransactionService, TransactionService>()
             .AddSingleton<IDictionary<string, string>>(_ => new Dictionary<string, string>());
         public static void ConfigureSwaggerOptions(this SwaggerGenOptions options)

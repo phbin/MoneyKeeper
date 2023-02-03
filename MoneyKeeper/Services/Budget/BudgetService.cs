@@ -1,26 +1,20 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using MoneyKeeper.Models;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using System.Linq;
-using MoneyKeeper.Dtos.Auth;
-using MoneyKeeper.Dtos.User;
-using MoneyKeeper.Data;
-using MoneyKeeper.Dtos;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
 using MoneyKeeper.Dtos.Budget;
-using MoneyKeeper.Helper;
+using MoneyKeeper.Dtos;
 using MoneyKeeper.Hubs;
+using MoneyKeeper.Models;
+using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
+using System;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using MoneyKeeper.Error;
+using MoneyKeeper.Helper;
 
-namespace MoneyKeeper.Services.Budget
+namespace MoneyKeeper.Services
 {
     public class BudgetService : IBudgetService
     {
@@ -40,7 +34,7 @@ namespace MoneyKeeper.Services.Budget
             _notiService = notiService;
         }
 
-        public async Task<IEnumerable<Models.Budget>> GetBudgets(int walletId, int month, int year)
+        public async Task<IEnumerable<Budget>> GetBudgets(int walletId, int month, int year)
         {
             var budgets = await _context.Budgets.AsNoTracking().Where(b => b.WalletId == walletId && b.Month == month && b.Year == year)
             .Include(b => b.Category)
@@ -48,7 +42,7 @@ namespace MoneyKeeper.Services.Budget
 
             return budgets;
         }
-        public async Task<Models.Budget> GetBudgetById(int id, int walletId, int month, int year)
+        public async Task<Budget> GetBudgetById(int id, int walletId, int month, int year)
         {
             var budget = await _context.Budgets.AsNoTracking().Where(b => b.WalletId == walletId && b.Month == month && b.Year == year)
             .Include(b => b.Category)
@@ -68,7 +62,7 @@ namespace MoneyKeeper.Services.Budget
             return budgetSum;
         }
 
-        async Task<bool> IsBudgetExist(int categoryId, int month, int year, Expression<Func<Models.Budget, bool>>? predicate = null)
+        async Task<bool> IsBudgetExist(int categoryId, int month, int year, Expression<Func<Budget, bool>>? predicate = null)
         {
             var budgetQuery = _context.Budgets.Where(b => b.CategoryId == categoryId && b.Month == month && b.Year == year);
             if (predicate != null)
@@ -78,7 +72,7 @@ namespace MoneyKeeper.Services.Budget
             return await budgetQuery.AnyAsync();
         }
 
-        public async Task<Models.Budget> CreateBudget(int userId, CreateBudgetDto createDto)
+        public async Task<Budget> CreateBudget(int userId, CreateBudgetDto createDto)
         {
             var cate = await _context.Categories.Where(c => c.Id == createDto.CategoryId).FirstOrDefaultAsync();
 
@@ -92,7 +86,7 @@ namespace MoneyKeeper.Services.Budget
                 throw new ApiException("Budget for this category in this time duration have already existed!", 400);
             }
 
-            var budget = _mapper.Map<Models.Budget>(createDto);
+            var budget = _mapper.Map<Budget>(createDto);
 
             var spentInMonth = _context.Transactions.Where(t => t.CategoryId == budget.CategoryId
             && t.CreatedAt.Month == createDto.Month && t.CreatedAt.Year == createDto.Year).Sum(t => t.Amount);

@@ -45,7 +45,6 @@ namespace MoneyKeeper
             {
                 option.UseSqlServer(Configuration.GetConnectionString("MyDB"));
             });
-            services.AddScoped<ITransactionService, TransactionService>();
 
             services.AddControllers();
             //swagger
